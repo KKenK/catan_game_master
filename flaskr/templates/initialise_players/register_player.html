@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+    {% block body %}
+        <header>
+            Register Player {{player_number}}
+        </header>
+        <main>
+            <form action="register_player" method="post">
+                <div>
+                    <label for="player_name">Name:</label>
+                    <input type="text" id="player_name" name="name">
+                </div>
+                <div>
+                    {% if maximum_players_reached %}
+                        <button disabled="disabled" type="submit">Next player</button>
+                    {% else %}
+                        <button type="submit">Next player</button>
+                    {% endif %}
+                </div>
+            </form>
+          	{% if minimum_players_required %}
+            	<a href="initialise_board">Initialise Board</a>
+          	{% else %}
+          		<!--TODO - 1 - Style to look like disabled button-->
+          		<div title="Insert disabled reason here">Initialise Board</div>
+          	{% endif %}
+        </main>
+    {% endblock %}
