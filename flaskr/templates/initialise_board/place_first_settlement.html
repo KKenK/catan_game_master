@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        <header>
+            <h1>{{player_name}} place settlement!</h1>
+        </header>
+        <main>
+            <form action="{{'place_settlement' if is_last_player else 'place_city'}}" method="post">
+              <div>
+                    <div>
+                         <label for="roll_1"> Roll 1: </label>
+                         <input type="number" id="roll_1" name="roll_1" min="1" max="12">
+                    </div>
+                    <div>
+                        <label for="resource_1"> Resource 1: </label>
+                        <select id="resource_1" name="resource_1">
+                            <option value="">None</option>
+                            {% for resource in resources %}
+                                <option value="{{resource}}">{{resource}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                         <label for="roll_2"> Roll 2: </label>
+                         <input type="number" id="roll_2" name="roll_2" min="1" max="12">
+                    </div>
+                    <div>
+                        <label for="resource_2"> Resource 2: </label>
+                        <select id="resource_2" name="resource_2">                   
+                            {% for resource in resources %}
+                                <option value="{{resource}}">{{resource}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>   
+                <div>
+                    <div>
+                         <label for="roll_3"> Roll 3: </label>
+                         <input type="number" id="roll_3" name="roll_3" min="1" max="12">
+                    </div>                            	
+                    <div>
+                        <label for="resource_3"> Resource 3: </label>
+                        <select id="resource_3" name="resource_3">                   
+                            {% for resource in resources %}
+                                <option value="{{resource}}">{{resource}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>     
+            </form>
