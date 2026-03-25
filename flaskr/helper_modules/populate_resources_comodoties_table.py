@@ -1,7 +1,7 @@
 def populate_resources_table(database_connector):
     
     with database_connector() as db:
-        db.execute("""INSERT INTO 'resources_comodoties' VALUES
+        db.execute("""INSERT INTO 'resources' VALUES
                                ('Wood'),  
                                ('Brick'),
                                ('Sheep'),
@@ -11,7 +11,7 @@ def populate_resources_table(database_connector):
 def populate_city_resources_comodities_table(database_connector):
     
     with database_connector() as db:
-        db.execute("""INSERT INTO 'resources_comodoties' VALUES
+        db.execute("""INSERT INTO 'city_resources_comodoties' VALUES
                                ('Paper'),  
                                ('Brick'),
                                ('Cloth'),
