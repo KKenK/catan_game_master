@@ -10,6 +10,7 @@ bp = Blueprint('initialise_players',__name__, url_prefix='/initialise_players/')
 def select_number_of_players():
     return render_template('select_number_of_players.html')
 
+
 @bp.route('/register_player', methods=['GET','POST'])
 def register_players():
     if request.method == 'GET':
