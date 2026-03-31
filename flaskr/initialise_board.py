@@ -4,26 +4,24 @@ from flask import (
 )
 
 from . import db
-from . import get_players, get_resources
-
+from .helper_modules import get_settlers, get_resources
 bp = Blueprint('initialise_board', __name__, url_prefix='/initialise_board/')
 
 @bp.route('/place_settlement')
 def place_settlement():
-  	players = get_players(db.database_connector)
-    resources = get_resources(db.database_connector)
-  	current_player = [player for players if player.victory_points == 0][0]
-    is_last_player = current_player.id == len(players)
-    return render_template('initalise_board/place_settlement.html', current_player = current_player, is_last_player = is_last_player, resources = resources)
+    settlers = get_settlers.get_settlers(db.database_connector)
+    resources = get_resources.get_resources(db.database_connector)
+    current_settler = [settler for settler in settlers if settlers.victory_points == 0][0]
+    is_last_player = current_settler.id == len(settlers)
+    return render_template('initalise_board/place_settlement.html', current_settler_name = current_settler['name'], is_last_player = is_last_player, resources = resources)
 
 @bp.route('/place_city')
 def place_city():
-  	players = get_players(db.database_connector)
+    settlers = get_settlers.get_settlers(db.database_connector)
     resources = get_resources(db.database_connector)
-  	current_player = [player for players if player.victory_points == 1][0]
-    is_last_player = current_player.id == len(players)
-    return render_template('initalise_board/place_city.html', current_player = current_player, is_last_player = is_last_player, resources = resources)
-
+    current_settler = [settler for settler in settlers if settlers.victory_points == 1][0]
+    is_last_player = current_settler.id == len(players)
+    return render_template('initalise_board/place_city.html', current_settler = current_settler, is_last_player = is_last_player, resources = resources)
 # get_first_player_without_settlement.py
 def get_first_player_without_settlement(database_connector):
     with databse_connector() as db:
@@ -41,24 +39,4 @@ def get_resources(database_connector):
     with databse_connector() as db:
     	return db.execute("""SELECT * FROM resources""").fetchall()
       
-# place_settlement.html
-{% extends "layout.html" %}
-
-    {% block body %}
-        <header>
-            <h1>{{player_name}} place settlement!</h1>
-        </header>
-        <main>
-            <form action="place_settlement" method="post">
-        		<div>
-            		<label for="roll_1"> Roll 1: </label>
-					<select id="roll_1" name="roll_1">
-                		<option value="">None</option>
-                		{% for resource in resources %}
-                  			<option value="{{resource}}">{{resource}}</option>
-                  		{% endfor %}
-                	</selct>
-                </div>
-            </form>
-        </main>
-    {% endblock %}
+#
