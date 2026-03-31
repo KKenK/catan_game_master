@@ -1,6 +1,7 @@
-Create TABLE game_progress (
+CREATE TABLE game_progress (
 	progress TEXT
 );
+INSERT INTO 'game_progress' (progress) VALUES ('uninitialised')
 
 CREATE TABLE settlers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
