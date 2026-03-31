@@ -1,3 +1,7 @@
+Create TABLE game_progress (
+	progress TEXT
+);
+
 CREATE TABLE settlers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
@@ -35,6 +39,7 @@ CREATE TABLE city_resources_comodoties (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL
 );
+
 
 -- rows = db.execute('SELECT ...')
 -- row = (id, settler_id, resource_1_name, roll_1, resource_2_name, roll_2, resource_3_name, roll_3, resource_4_name, resource_5_name, resource_6_name, is_city)
