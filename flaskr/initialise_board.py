@@ -23,7 +23,7 @@ def place_city():
     update_game_progress.update_game_progress(db.database_connector, "initial city placement")
     settlers = get_settlers.get_settlers(db.database_connector)
     resources = get_resources(db.database_connector)
-    current_settler = [settler for settler in settlers if settlers.victory_points == 1][0] # TODO
+    current_settler = [settler for settler in settlers if settlers.victory_points == 1][-1]
     is_last_settler = True if current_settler.id == len(settlers) else False
     return render_template('initalise_board/place_city.html', current_settler = current_settler,
                             is_last_player = is_last_settler,
