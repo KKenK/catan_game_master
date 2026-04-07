@@ -1,3 +1,4 @@
+# place_settlement.py
 from flask import (
     Blueprint, g, redirect, render_template, request, url_for
 )
@@ -12,10 +13,10 @@ def place_settlement():
     settlers = get_settlers.get_settlers(db.database_connector)
     resources = get_resources.get_resources(db.database_connector)
     current_settler = [settler for settler in settlers if settlers.victory_points == 0][0]
-    is_last_settler = True if current_settler.id == len(settlers) else False
+    have_all_settlers_placed_a_settlement = True if current_settler.id == len(settlers) else False
     return render_template('initalise_board/place_settlement.html',
                             current_settler_name = current_settler['name'],
-                            is_last_player = is_last_settler,
+                            have_all_settlers_placed_a_settlement = have_all_settlers_placed_a_settlement,
                             resources = resources)
 
 @bp.route('/place_city')
@@ -24,7 +25,7 @@ def place_city():
     settlers = get_settlers.get_settlers(db.database_connector)
     resources = get_resources(db.database_connector)
     current_settler = [settler for settler in settlers if settlers.victory_points == 1][-1]
-    is_last_settler = True if current_settler.id == len(settlers) else False
+    have_all_settlers_placed_a_city = True if current_settler.id == len(settlers) else False
     return render_template('initalise_board/place_city.html', current_settler = current_settler,
-                            is_last_player = is_last_settler,
+                            have_all_settlers_placed_a_city = have_all_settlers_placed_a_city,
                             resources = resources)
