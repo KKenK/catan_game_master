@@ -2,7 +2,7 @@ from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
 from . import db
-from .helper_modules import get_settlers, populate_resources_comodoties_table, insert_player_into_settlers_table
+from .helper_modules import get_settlers, populate_resources_comodoties_table, insert_settler_into_settlers_table
 
 bp = Blueprint('initialise_players',__name__, url_prefix='/initialise_players/')
 
@@ -24,7 +24,7 @@ def register_players():
     elif request.method == 'POST':
         player_name = request.form['name']
 
-        player_id = insert_player_into_settlers_table.insert_player_into_settlers_table(db.DatabaseConnector, player_name)
+        player_id = insert_settler_into_settlers_table.insert_settler_into_settlers_table(db.DatabaseConnector, player_name)
 
     minimum_players_required = False
     maximum_players_reached = False
