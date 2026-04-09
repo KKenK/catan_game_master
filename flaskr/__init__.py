@@ -24,10 +24,9 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # Import and register the blueprints
-    from . import player_setup
-    app.register_blueprint(initialise_settlers_blueprint.bp)
-
     from . import index_page
     app.register_blueprint(index_page.bp)
 
+    from . import initialise_settlers_blueprint
+    app.register_blueprint(initialise_settlers_blueprint.bp)
     return app
