@@ -1,0 +1,10 @@
+C:\Users\kylek\Documents\web-projects\catan_game_master\flaskr\templates\initialise_players.html
+1 - Style to look like disabled button/
+
+C:\Users\kylek\Documents\web-projects\catan_game_master\flaskr\templates\index_page.html
+1 - Add link for new game which clears tables.
+2 - Add link for continue which goes to the current game.
+
+
+Continue link/button using game_progress keywords to determine current game state redirect.
+Clearing all tables except for game progress table.
