@@ -25,7 +25,7 @@ def create_app(test_config=None):
 
     # Import and register the blueprints
     from . import player_setup
-    app.register_blueprint(player_setup.bp)
+    app.register_blueprint(initialise_settlers_blueprint.bp)
 
     from . import index_page
     app.register_blueprint(index_page.bp)
