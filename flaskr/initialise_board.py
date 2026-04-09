@@ -14,8 +14,7 @@ def place_settlement():
     resources = get_resources.get_resources(db.database_connector)
     current_settler = [settler for settler in settlers if settlers.victory_points == 0][0]
     have_all_settlers_placed_a_settlement = True if current_settler.id == len(settlers) else False
-    return render_template('initalise_board/place_settlement.html',
-                            current_settler_name = current_settler['name'],
+    return render_template('initalise_board/place_settlement.html', current_settler_name = current_settler['name'],
                             have_all_settlers_placed_a_settlement = have_all_settlers_placed_a_settlement,
                             resources = resources)
 
@@ -26,6 +25,6 @@ def place_city():
     resources = get_resources(db.database_connector)
     current_settler = [settler for settler in settlers if settlers.victory_points == 1][-1]
     have_all_settlers_placed_a_city = True if current_settler.id == len(settlers) else False
-    return render_template('initalise_board/place_city.html', current_settler = current_settler,
+    return render_template('initalise_board/place_city.html', current_settler_name = current_settler['name'],
                             have_all_settlers_placed_a_city = have_all_settlers_placed_a_city,
                             resources = resources)
