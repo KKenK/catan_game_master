@@ -2,7 +2,7 @@
 
     {% block body %}
         <header>
-            <h1>{{player_name}} place settlement!</h1>
+            <h1>{{current_settler_name}} place settlement!</h1>
         </header>
         <main>
             <form action="{{'place_settlement' if is_last_player else 'place_city'}}" method="post">
