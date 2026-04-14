@@ -36,7 +36,7 @@ CREATE TABLE resources (
     "name" TEXT NOT NULL
 );
 
-CREATE TABLE city_resources_comodoties (
+CREATE TABLE city_resources_comomdities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL
 );
