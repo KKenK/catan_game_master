@@ -14,7 +14,7 @@ def select_number_of_players():
 @bp.route('/register_player', methods=['GET','POST'])
 def register_players():
     if request.method == 'GET':
-        settlers = get_settlers.get_settlers(db.database_connector)
+        settlers = get_settlers.get_settlers(db.DatabaseConnector)
 
         if settlers:
             player_id = settlers[-1]['id']
