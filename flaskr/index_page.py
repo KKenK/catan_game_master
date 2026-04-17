@@ -13,7 +13,7 @@ def index():
 def new_game():
     #clear_game_tables.clear_game_tables(db.DatabaseConnector)
     print(get_settlers.get_settlers(db.DatabaseConnector))   
-    return redirect("/initialise_players/register_settlers")
+    return redirect("/initialise_settlers/register_settlers")
 
 @bp.route('/continue_game')
 def continue_game():
