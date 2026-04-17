@@ -18,8 +18,8 @@ class DatabaseConnector():
     def __exit__(self, exc_type, exc_value, exc_tb):
         if exc_type is None:
             if 'db' in g:
-                g.db.close()
-            
+                #g.db.close()
+                pass
             print('exited normally')
             
         else:
@@ -46,5 +46,11 @@ def init_db_command():
         click.echo('Initialized the database.')
     except sqlite3.OperationalError as operational_error:
         raise ValueError('Database tables already exist. Manually remove them?', operational_error)
+def close_db(e=None):
+    db = g.pop('db', None)
+
+    if db is not None:
+        db.close()
 def init_app(app):
+    app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
