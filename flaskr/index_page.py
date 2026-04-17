@@ -11,21 +11,21 @@ def index():
 
 @bp.route('/new_game')
 def new_game():
-    clear_game_tables.clear_game_tables(db.DatabaseConnector)
+    #clear_game_tables.clear_game_tables(db.DatabaseConnector)
     print(get_settlers.get_settlers(db.DatabaseConnector))   
-    redirect("/initialise_players/register_settlers")
+    return redirect("/initialise_players/register_settlers")
 
 @bp.route('/continue_game')
 def continue_game():
     game_progress = get_game_progress.get_game_progress(db.DatabaseConnector)
     
     if game_progress == "game in progress":
-        redirect()
+        return redirect()
     elif game_progress == "settler registeration":
-        redirect('/initialise_players/register_settler')
+        return redirect('/initialise_players/register_settler')
     elif game_progress == "initial settlement placement":
-        redirect('/initialise_board/place_settlement')
+        return redirect('/initialise_board/place_settlement')
     elif game_progress == "initial city placement":
-        redirect('/initialise_board/place_city')
+        return redirect('/initialise_board/place_city')
     else:
-        redirect('/')
+        return redirect('/')
