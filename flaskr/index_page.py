@@ -11,7 +11,7 @@ def index():
 
 @bp.route('/new_game')
 def new_game():
-    #clear_game_tables.clear_game_tables(db.DatabaseConnector)
+    clear_game_tables.clear_game_tables(db.DatabaseConnector)
     print(get_settlers.get_settlers(db.DatabaseConnector))   
     return redirect("/initialise_settlers/register_settlers")
 
