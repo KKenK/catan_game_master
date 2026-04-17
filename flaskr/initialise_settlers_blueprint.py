@@ -4,15 +4,15 @@ from flask import (
 from . import db
 from .helper_modules import get_settlers, populate_resources_comodoties_table, insert_settler_into_settlers_table
 
-bp = Blueprint('initialise_players',__name__, url_prefix='/initialise_players/')
+bp = Blueprint('initialise_players',__name__, url_prefix='/initialise_settlers/')
 
 @bp.route('/')
 def select_number_of_players():
     return render_template('select_number_of_players.html')
 
 
-@bp.route('/register_player', methods=['GET','POST'])
-def register_players():
+@bp.route('/register_settlers', methods=['GET','POST'])
+def register_settlers():
     if request.method == 'GET':
         settlers = get_settlers.get_settlers(db.DatabaseConnector)
 
