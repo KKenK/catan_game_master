@@ -2,7 +2,7 @@ from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
 from . import db
-from .helper_modules import get_settlers, populate_resources_comodoties_table, insert_settler_into_settlers_table
+from .helper_modules import get_settlers, populate_resources_commodities_table, insert_settler_into_settlers_table
 
 bp = Blueprint('initialise_players',__name__, url_prefix='/initialise_settlers/')
 
