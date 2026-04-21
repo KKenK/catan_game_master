@@ -1,7 +1,6 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from . import db
 from .helper_modules import get_game_progress, clear_game_tables, get_settlers
 bp = Blueprint('index_page',__name__)
 
@@ -11,13 +10,13 @@ def index():
 
 @bp.route('/new_game')
 def new_game():
-    clear_game_tables.clear_game_tables(db.DatabaseConnector)
-    print(get_settlers.get_settlers(db.DatabaseConnector))   
+    clear_game_tables.clear_game_tables()
+    print(get_settlers.get_settlers())   
     return redirect("/initialise_settlers/register_settlers")
 
 @bp.route('/continue_game')
 def continue_game():
-    game_progress = get_game_progress.get_game_progress(db.DatabaseConnector)
+    game_progress = get_game_progress.get_game_progress()
     
     if game_progress == "game in progress":
         return redirect()
