@@ -1,11 +1,19 @@
-def get_settlers(database_connector):
-    with database_connector() as db:
-        return db.execute("""SELECT * FROM settlers""").fetchall()
-    
-def get_first_settler_without_settlement(database_connector):
-    with database_connector() as db:
-        return db.execute("""SELECT * FROM settlers WHERE victory_points = 0 LIMIT 1""").fetchone()
+from .. import db
 
-def get_last_settler_without_city(database_connector):
-    with database_connector() as db:
-        return db.execute("""SELECT * FROM settlers WHERE victory_points = 1 ORDER BY id DESC LIMIT 1""").fetchone()
+def get_settlers():
+    
+    database_connection = db.get_db()
+    
+    return database_connection.execute("""SELECT * FROM settlers""").fetchall()
+    
+def get_first_settler_without_settlement():
+    
+    database_connection = db.get_db()
+    
+    return database_connection.execute("""SELECT * FROM settlers WHERE victory_points = 0 LIMIT 1""").fetchone()
+
+def get_last_settler_without_city():
+    
+    database_connection = db.get_db()
+    
+    return database_connection.execute("""SELECT * FROM settlers WHERE victory_points = 1 ORDER BY id DESC LIMIT 1""").fetchone()

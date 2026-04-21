@@ -1,4 +1,8 @@
-def get_game_progress(database_connector):
-    with database_connector() as db:
-    	return db.execute("""SELECT 'progress' FROM game_progress""").fetchone()
+from .. import db
+
+def get_game_progress():
+    
+    database_connection = db.get_db()
+
+    return database_connection.execute("""SELECT 'progress' FROM game_progress""").fetchone()
   

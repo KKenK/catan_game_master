@@ -1,17 +1,21 @@
-def populate_resources_table(database_connector):
+from .. import db
+
+def populate_resources_table():
     
-    with database_connector() as db:
-        db.execute("""INSERT INTO 'resources' VALUES
+    database_connection = db.get_db()
+    
+    database_connection.execute("""INSERT INTO 'resources' VALUES
                                ('Wood'),  
                                ('Brick'),
                                ('Sheep'),
                                ('Wheat'),
                                ('Ore');""")
     
-def populate_city_resources_comodities_table(database_connector):
+def populate_city_resources_comodities_table():
     
-    with database_connector() as db:
-        db.execute("""INSERT INTO 'city_resources_comodoties' VALUES
+    database_connection = db.get_db()
+    
+    database_connection.execute("""INSERT INTO 'city_resources_comodoties' VALUES
                                ('Paper'),  
                                ('Brick'),
                                ('Cloth'),
