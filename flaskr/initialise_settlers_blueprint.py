@@ -3,7 +3,7 @@ from flask import (
 )
 from .helper_modules import get_settlers, populate_resources_commodities_table, insert_settler_into_settlers_table
 
-bp = Blueprint('initialise_players',__name__, url_prefix='/initialise_settlers/')
+bp = Blueprint('initialise_settlers',__name__, url_prefix='/initialise_settlers/')
 
 @bp.route('/')
 def select_number_of_players():
@@ -33,4 +33,4 @@ def register_settlers():
     if player_id >= 6:
         maximum_players_reached = True
     
-    return render_template('initialise_players/register_player.html', player_number = player_id + 1, maximum_players_reached = maximum_players_reached, minimum_players_required = minimum_players_required)
+    return render_template('register_player.html', player_number = player_id + 1, maximum_players_reached = maximum_players_reached, minimum_players_required = minimum_players_required)
