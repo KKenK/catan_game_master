@@ -29,4 +29,7 @@ def create_app(test_config=None):
 
     from . import initialise_settlers_blueprint
     app.register_blueprint(initialise_settlers_blueprint.bp)
+
+    from . import initialise_board_blueprint
+    app.register_blueprint(initialise_board_blueprint.bp)    
     return app
