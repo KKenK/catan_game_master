@@ -10,9 +10,10 @@ def index():
 
 @bp.route('/new_game')
 def new_game():
+    print(get_settlers.get_settlers())   
     clear_game_tables.clear_game_tables()
     print(get_settlers.get_settlers())   
-    return redirect("/initialise_settlers/register_settlers")
+    return redirect("/initialise_settlers/register_settler")
 
 @bp.route('/continue_game')
 def continue_game():
