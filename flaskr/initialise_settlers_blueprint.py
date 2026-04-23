@@ -10,7 +10,7 @@ def select_number_of_players():
     return render_template('select_number_of_players.html')
 
 
-@bp.route('/register_settlers', methods=['GET','POST'])
+@bp.route('/register_settler', methods=['GET','POST'])
 def register_settlers():
     if request.method == 'GET':
         settlers = get_settlers.get_settlers()
