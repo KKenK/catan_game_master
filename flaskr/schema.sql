@@ -4,14 +4,14 @@ CREATE TABLE game_progress (
 INSERT INTO 'game_progress' (progress) VALUES ('uninitialised');
 
 CREATE TABLE settlers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     victory_points INTEGER DEFAULT 0 NOT NULL,
     army_strength INTEGER DEFAULT 0 NOT NULL 
 );
 
 CREATE TABLE settlements (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     settler_id INTEGER NOT NULL,
     resource_1 TEXT,
     roll_1 INTEGER,
@@ -24,7 +24,7 @@ CREATE TABLE settlements (
 );
 
 CREATE TABLE knights (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     settler_id INTEGER NOT NULL,
     "level" INTEGER NOT NULL,
     active_status INTEGER NOT NULL,
@@ -32,12 +32,12 @@ CREATE TABLE knights (
 );
 
 CREATE TABLE resources (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     "name" TEXT NOT NULL
 );
 
 CREATE TABLE city_resources_commodities (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     "name" TEXT NOT NULL
 );
 
