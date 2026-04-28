@@ -16,21 +16,21 @@ def register_settlers():
         settlers = get_settlers.get_settlers()
 
         if settlers:
-            player_id = settlers[-1]['id']
+            settler_id = settlers[-1]['id']
         else:
-            player_id = 0
+            settler_id = 0
     
     elif request.method == 'POST':
-        player_name = request.form['name']
+        settler_name = request.form['name']
 
-        player_id = insert_settler_into_settlers_table.insert_settler_into_settlers_table(player_name)
+        settler_id = insert_settler_into_settlers_table.insert_settler_into_settlers_table(settler_name)
 
     minimum_players_required = False
     maximum_players_reached = False
     
-    if player_id >= 2:
+    if settler_id >= 2:
         minimum_players_required = True
-    if player_id >= 6:
+    if settler_id >= 6:
         maximum_players_reached = True
     
-    return render_template('register_settler.html', player_number = player_id + 1, maximum_players_reached = maximum_players_reached, minimum_players_required = minimum_players_required)
+    return render_template('register_settler.html', settler_number = settler_id + 1, maximum_settler_reached = maximum_players_reached, minimum_players_required = minimum_players_required)
