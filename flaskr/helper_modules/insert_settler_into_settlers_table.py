@@ -11,4 +11,4 @@ def insert_settler_into_settlers_table(username):
 
     database_connection.commit()
 
-    return settler_id
+    return
