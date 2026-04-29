@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_settlers, populate_resources_commodities_table, insert_settler_into_settlers_table
+from .helper_modules import get_settlers, populate_resources_commodities_table, insert_settler_into_settlers_table, calculate_row_id
 
 bp = Blueprint('initialise_settlers',__name__, url_prefix='/initialise_settlers/')
 
@@ -12,25 +12,19 @@ def select_number_of_players():
 
 @bp.route('/register_settler', methods=['GET','POST'])
 def register_settlers():
-    if request.method == 'GET':
-        settlers = get_settlers.get_settlers()
+    next_settler_id = calculate_row_id.calculate_row_id('settlers')
 
-        if settlers:
-            settler_id = settlers[-1]['id']
-        else:
-            settler_id = 0
-    
-    elif request.method == 'POST':
+    if request.method == 'POST':
         settler_name = request.form['name']
 
-        settler_id = insert_settler_into_settlers_table.insert_settler_into_settlers_table(settler_name)
+        insert_settler_into_settlers_table.insert_settler_into_settlers_table(settler_name)
 
     minimum_players_required = False
     maximum_players_reached = False
-    
-    if settler_id >= 2:
+
+    if next_settler_id >= 1:
         minimum_players_required = True
-    if settler_id >= 6:
+    if next_settler_id >= 5:
         maximum_players_reached = True
-    
-    return render_template('register_settler.html', next_settler_number = settler_id + 2, maximum_settler_reached = maximum_players_reached, minimum_players_required = minimum_players_required)
+
+    return render_template('register_settler.html', next_settler_number = next_settler_id + 1, maximum_settler_reached = maximum_players_reached, minimum_players_required = minimum_players_required)
