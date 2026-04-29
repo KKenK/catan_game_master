@@ -12,13 +12,14 @@ def select_number_of_players():
 
 @bp.route('/register_settler', methods=['GET','POST'])
 def register_settlers():
-    next_settler_id = calculate_row_id.calculate_row_id('settlers')
-
+ 
     if request.method == 'POST':
         settler_name = request.form['name']
 
         insert_settler_into_settlers_table.insert_settler_into_settlers_table(settler_name)
-
+    
+    next_settler_id = calculate_row_id.calculate_row_id('settlers')
+    
     minimum_players_required = False
     maximum_players_reached = False
 
