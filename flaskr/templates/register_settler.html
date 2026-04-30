@@ -1,23 +1,21 @@
 {% extends 'layout.html' %}
 
     {% block body %}
-        <header>
-            Register Player {{next_settler_number}}
-        </header>
-        <main>
-            <form action="register_settler" method="post">
-                <div>
-                    <label for="player_name">Name:</label>
-                    <input type="text" id="player_name" name="name">
-                </div>
-                <div>
-                    {% if maximum_settlers_reached %}
-                        <button type="submit" disabled>Add Player</button>
-                    {% else %}
+        {% if maximum_settlers_reached == false %}
+            <header>
+                Register Player {{next_settler_number}}
+            </header>
+            <main>
+                <form action="register_settler" method="post">
+                    <div>
+                        <label for="player_name">Name:</label>
+                        <input type="text" id="player_name" name="name">
+                    </div>
+                    <div>
                         <button type="submit">Add Player</button>
-                    {% endif %}
-                </div>
-            </form>
+                    </div>
+                </form>
+            {% endif %}
           	{% if minimum_settlers_required %}
             	<a href="initialise_board">Initialise Board</a>
           	{% else %}
