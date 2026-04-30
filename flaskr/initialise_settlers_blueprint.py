@@ -22,7 +22,7 @@ def register_settlers():
     minimum_settlers_required = False
     maximum_settlers_reached = False
 
-    if next_settler_id >= 1:
+    if next_settler_id >= 2:
         minimum_players_required = True
     if next_settler_id >= 5:
         maximum_players_reached = True
