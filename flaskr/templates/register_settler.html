@@ -11,14 +11,14 @@
                     <input type="text" id="player_name" name="name">
                 </div>
                 <div>
-                    {% if maximum_players_reached %}
+                    {% if maximum_settlers_reached %}
                         <button disabled="disabled" type="submit">Next player</button>
                     {% else %}
                         <button type="submit">Next player</button>
                     {% endif %}
                 </div>
             </form>
-          	{% if minimum_players_required %}
+          	{% if minimum_settlers_required %}
             	<a href="initialise_board">Initialise Board</a>
           	{% else %}
           		<!--TODO - 1 - Style to look like disabled button-->
