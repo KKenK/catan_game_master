@@ -23,9 +23,9 @@ def register_settlers():
     maximum_settlers_reached = False
 
     if next_settler_id >= 2:
-        minimum_players_required = True
+        minimum_settlers_required = True
     if next_settler_id >= 5:
-        maximum_players_reached = True
+        maximum_settlers_reached = True
 
 
     return render_template('register_settler.html', next_settler_number = next_settler_id + 1, maximum_settler_reached = maximum_settlers_reached, minimum_settlers_required = minimum_settlers_required)
