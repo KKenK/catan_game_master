@@ -15,12 +15,16 @@
                         <button type="submit">Add Player</button>
                     </div>
                 </form>
-            {% endif %}
-          	{% if minimum_settlers_required %}
-            	<a href="initialise_board">Initialise Board</a>
-          	{% else %}
-          		<!--TODO - 1 - Style to look like disabled button-->
-          		<div title="Insert disabled reason here">Initialise Board</div>
-          	{% endif %}
-        </main>
+        		{% if minimum_settlers_required %}
+            		<a href="initialise_board">Initialise Board</a>
+		        {% else %}
+          			<!--TODO - 1 - Style to look like disabled button-->
+          			<div title="Insert disabled reason here">Initialise Board</div>
+        		{% endif %}
+			</main>
+        {% else %}
+			<main>
+                <a href="initialise_board">Initialise Board</a>
+        	</main>
+        {% endif %}
     {% endblock %}
