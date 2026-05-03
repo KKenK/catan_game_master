@@ -1,7 +1,7 @@
 # Returns a list of resources from the resources table
 from .. import db
 
-def get_resources(database_connector):
+def get_resources():
     
     database_connection = db.get_db()
     
