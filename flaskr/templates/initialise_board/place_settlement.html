@@ -16,7 +16,7 @@
                         <select id="resource_1" name="resource_1">
                             <option value="">None</option>
                             {% for resource in resources %}
-                                <option value="{{resource}}">{{resource}}</option>
+                                <option value="{{resource['id']}}">{{resource['name']}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -28,9 +28,10 @@
                     </div>
                     <div>
                         <label for="resource_2"> Resource 2: </label>
-                        <select id="resource_2" name="resource_2">                   
+                        <select id="resource_2" name="resource_2">
+                            <option value="">None</option>                 
                             {% for resource in resources %}
-                                <option value="{{resource}}">{{resource}}</option>
+                                <option value="{{resource['id']}}">{{resource['name']}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -42,12 +43,16 @@
                     </div>                            	
                     <div>
                         <label for="resource_3"> Resource 3: </label>
-                        <select id="resource_3" name="resource_3">                   
+                        <select id="resource_3" name="resource_3">
+                            <option value="">None</option>
                             {% for resource in resources %}
-                                <option value="{{resource}}">{{resource}}</option>
+                                <option value="{{resource['id']}}">{{resource['name']}}</option>
                             {% endfor %}
                         </select>
                     </div>
+                </div>
+                <div>
+                    <button type="submit">Place settlement</button>
                 </div>     
             </form>
         </main>
