@@ -1,6 +1,6 @@
 from .. import db
 
-def set_resources_commodoties(resource_tuple_list):
+def set_resources_table(resource_tuple_list):
     
     database_connection = db.get_db()
     
