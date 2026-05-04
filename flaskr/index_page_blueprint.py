@@ -14,7 +14,7 @@ def new_game():
     clear_game_tables.clear_game_tables()
     print(get_settlers.get_settlers())   
     set_resources_table.set_resources_table(resources.base_resources)
-    set_resources_table.set_resources_table(resources.city_resources_comodities)
+    set_resources_table.set_resources_commodities_table(resources.city_resources_comodities)
     return redirect("/initialise_settlers/register_settler")
 
 @bp.route('/continue_game')
