@@ -1,5 +1,4 @@
 from .. import db
-from . import resources
 
 def set_resources_commodoties(resource_tuple_list):
     
