@@ -1,11 +1,12 @@
 {% extends "layout.html" %}
 
     {% block body %}
+        {% if not have_all_settlers_placed_a_settlement %}
         <header>
             <h1>{{current_settler_name}} place settlement!</h1>
         </header>
         <main>
-            <form action="{{'place_settlement' if is_last_player else 'place_city'}}" method="post">
+            <form action= "place_settlement" method="post">
               <div>
                     <div>
                          <label for="roll_1"> Roll 1: </label>
@@ -59,4 +60,12 @@
                 <a href="../../">Return</a>
             </div></dive>
         </main>
+        {% else %}
+        <header>
+            <h1>All settlements placed!</h1>
+        </header>
+        <main>
+            <a href="place_city" method="get">Place first cities</a>
+        </main>
+        {% endif %}
     {% endblock %}
