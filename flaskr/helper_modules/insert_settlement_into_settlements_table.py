@@ -1,4 +1,5 @@
 from .. import db
+from . import increment_victory_points
 
 def insert_settlement_into_settlements_table(settlement):
 
@@ -14,7 +15,7 @@ def insert_settlement_into_settlements_table(settlement):
                                 settlement['resource_2'], settlement['roll_2'],
                                 settlement['resource_3'], settlement['roll_3'],
                                 settlement['is_city']))
-    
+
     database_connection.commit()
 
     return
