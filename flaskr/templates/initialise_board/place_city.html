@@ -3,7 +3,7 @@
     {% block body %}
         {% if not have_all_settlers_placed_a_city%}
         <header>
-            <h1>{{current_settler_name}} place city!</h1>
+            <h1>{{settler_to_place_city_name}} place city!</h1>
         </header>
         <main>
             <form action= "place_city" method="post">
