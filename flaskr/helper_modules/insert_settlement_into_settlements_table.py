@@ -1,5 +1,4 @@
 from .. import db
-from . import increment_victory_points
 
 def insert_settlement_into_settlements_table(settlement):
 
