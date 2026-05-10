@@ -11,7 +11,7 @@ CREATE TABLE settlers (
 );
 
 CREATE TABLE settlements (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     settler_id INTEGER NOT NULL,
     resource_1 TEXT,
     roll_1 INTEGER,
