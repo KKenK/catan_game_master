@@ -31,18 +31,16 @@ def place_settlement():
         
         increment_victory_points.increment_victory_points(current_settler['id'])
     
-    if not settlers_with_no_victory_points:
-        have_all_settlers_placed_a_settlement = True
-        current_settler = {'username' : 'All settlements places!',}
+    resources = get_resources.get_resources()  
+    
+    if settlers_with_no_victory_points:
+        return render_template('initialise_board/place_settlement.html', settler_to_place_settlement = settlers_with_no_victory_points[0]['username'],
+                        have_all_settlers_placed_a_settlement = False,
+                        resources = resources)      
     else:
-        current_settler = settlers_with_no_victory_points[0]
-        have_all_settlers_placed_a_settlement = False
-    
-    resources = get_resources.get_resources()
-    
-    return render_template('initialise_board/place_settlement.html', current_settler_name = current_settler['username'],
-                            have_all_settlers_placed_a_settlement = have_all_settlers_placed_a_settlement,
-                            resources = resources)
+        return render_template('initialise_board/place_settlement.html', 
+                        have_all_settlers_placed_a_settlement = True,
+                        resources = resources)
 
 @bp.route('/place_city', methods =['GET', 'POST'])
 def place_city():
@@ -74,6 +72,6 @@ def place_city():
     
     resources = get_resources.get_resources()
     
-    return render_template('initialise_board/place_city.html', current_settler_name = current_settler['username'],
+    return render_template('initialise_board/place_city.html', settler_to_place_city_name = current_settler['username'],
                             have_all_settlers_placed_a_city = have_all_settlers_placed_a_city,
                             resources = resources)
