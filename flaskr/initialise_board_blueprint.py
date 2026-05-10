@@ -34,7 +34,7 @@ def place_settlement():
     resources = get_resources.get_resources()  
     
     if settlers_with_no_victory_points:
-        return render_template('initialise_board/place_settlement.html', settler_to_place_settlement = settlers_with_no_victory_points[0]['username'],
+        return render_template('initialise_board/place_settlement.html', settler_to_place_settlement_name = settlers_with_no_victory_points[0]['username'],
                         have_all_settlers_placed_a_settlement = False,
                         resources = resources)      
     else:
