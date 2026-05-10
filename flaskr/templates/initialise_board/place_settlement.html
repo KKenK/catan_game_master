@@ -3,7 +3,7 @@
     {% block body %}
         {% if not have_all_settlers_placed_a_settlement %}
         <header>
-            <h1>{{current_settler_name}} place settlement!</h1>
+            <h1>{{settler_to_place_settlement_name}} place settlement!</h1>
         </header>
         <main>
             <form action= "place_settlement" method="post">
