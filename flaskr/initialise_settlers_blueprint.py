@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_settlers, populate_resources_commodities_table, insert_settler_into_settlers_table, calculate_row_id
+from .helper_modules import get_settlers, update_game_progress, populate_resources_commodities_table, insert_settler_into_settlers_table, calculate_row_id
 
 bp = Blueprint('initialise_settlers',__name__, url_prefix='/initialise_settlers/')
 
@@ -11,7 +11,9 @@ def select_number_of_players():
 
 @bp.route('/register_settler', methods=['GET','POST'])
 def register_settlers():
- 
+
+    update_game_progress.update_game_progress("settler registeration")
+
     if request.method == 'POST':
         settler_name = request.form['name']
 
