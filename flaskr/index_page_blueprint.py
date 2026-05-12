@@ -29,5 +29,7 @@ def continue_game():
         return redirect('/initialise_board/place_settlement')
     elif game_progress == "initial city placement":
         return redirect('/initialise_board/place_city')
+    elif game_progress == "game_in_progress":
+        return redirect('/game')
     else:
         return redirect('/')
