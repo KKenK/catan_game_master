@@ -9,6 +9,7 @@ CREATE TABLE settlers (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     victory_points INTEGER DEFAULT 0 NOT NULL,
+    defender_of_catan INTEGER DEFAULT 0 NOT NULL,
     army_strength INTEGER DEFAULT 0 NOT NULL 
 );
 
