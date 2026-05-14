@@ -1,10 +1,38 @@
-game_page.html
 {% extends "layout.html" %}
 
     {% block body %}
         <header>
-            <h1></h1>
+            <h1>Game</h1>
         </header>
         <main>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Settler Name</th>
+                        <th>Victory Points</th>
+                      	<th>Longest Road</th>
+                      	<th>Defender of Catan</th>
+                        <th>Knights Strength</th>
+                        <th>Knights</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for settler in settlers %}
+                        <tr>
+                            <td>{{settler['name']}}</td>
+                            <td>{{settler['victory_points']}}</td>
+                            <td>{{settler['longest_road']}}</td>
+                            <td>{{settler['defender_of_catan']}}</td>
+                            <td>{{settler['knights_strength']}}</td>
+                            <td>{{settler['knights']}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+              	<a href="">Build Settlement</a>
+                <a href="">Promote Settlement</a>
+                <a href="">Build Knight</a>
+            </div>
         </main>
     {% endblock %}
