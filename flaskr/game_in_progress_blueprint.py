@@ -8,7 +8,7 @@ bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 @bp.route('/')
 def game():
     
-    if update_game_progress.get_game_progress() != "game_in_progress":
+    if get_game_progress.get_game_progress() != "game_in_progress":
             update_game_progress.update_settler_turn(1)
             update_game_progress.update_game_progress("game_in_progress")
 
