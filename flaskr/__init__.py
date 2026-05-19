@@ -31,5 +31,9 @@ def create_app(test_config=None):
     app.register_blueprint(initialise_settlers_blueprint.bp)
 
     from . import initialise_board_blueprint
-    app.register_blueprint(initialise_board_blueprint.bp)    
+    app.register_blueprint(initialise_board_blueprint.bp) 
+
+    from . import game_in_progress_blueprint
+    app.register_blueprint(game_in_progress_blueprint.bp)
+   
     return app
