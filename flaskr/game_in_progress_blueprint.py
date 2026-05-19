@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_settlers, get_knights, get_settlements, update_game_progress
+from .helper_modules import get_game_progress, get_settlers, get_knights, get_settlements, update_game_progress
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
