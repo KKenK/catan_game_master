@@ -1,5 +1,5 @@
 CREATE TABLE game_progress (
-	progress TEXT
+	progress TEXT,
     settler_turn TEXT
     
 );
