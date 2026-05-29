@@ -32,7 +32,7 @@ CREATE TABLE knights (
     id INTEGER PRIMARY KEY,
     settler_id INTEGER NOT NULL,
     "level" INTEGER NOT NULL,
-    active_status INTEGER NOT NULL,
+    "is_active" INTEGER NOT NULL,
     FOREIGN KEY (settler_id) REFERENCES settlers(id)
 );
 
