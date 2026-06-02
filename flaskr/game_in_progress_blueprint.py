@@ -34,8 +34,8 @@ def game():
     for settler in settlers:
 
         settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
-        settlers_dict[settler['id']]['knights'] = None
-        
+        settlers_dict[settler['id']]['knights'] = "None"
+
     settlements = get_settlements.get_settlements()
 
     return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict)
