@@ -13,7 +13,7 @@ def game():
             update_game_progress.update_game_progress("game_in_progress")
 
     settlers = get_settlers.get_settlers()
-
+    settler_ids = sorted([settler['id'] for settler in settlers])
     knights = get_knights.get_knights()
     print(f"knights: {knights}")
 
@@ -26,15 +26,16 @@ def game():
     knight_strength_dict = {knights_settler_ids[i] : sum(list_of_active_knights_by_settler_id[i]) for i in range(len(knights_settler_ids))}
     print(f"knight_strength_dict: {knight_strength_dict}")
     
+    settler_table_keys = list(settlers[0].keys())
+    settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
+    print (f"settler_dict: {settlers_dict}")
+
+    
     for settler in settlers:
-        if settler['id'] not in knight_strength_dict:
-            knight_strength_dict[settler['id']] = 0 
+
+        settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
+        settlers_dict[settler['id']]['knights'] = None
         
-        settler['army_strength'] = 0 if not knight_strength_dict[settler['id']] else knight_strength_dict[settler['id']]
-    
-    for settler in settlers:
-        settler['army_strength'] = knight_strength_dict[settler['id']]     
-    
     settlements = get_settlements.get_settlements()
 
-    return render_template('game_page.html', settlers = settlers)
+    return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict)
