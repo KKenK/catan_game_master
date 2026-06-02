@@ -17,14 +17,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for settler in settlers %}
+                    {% for settler_id in settler_ids %}
                         <tr>
-                            <td>{{settler['name']}}</td>
-                            <td>{{settler['victory_points']}}</td>
-                            <td>{{settler['longest_road']}}</td>
-                            <td>{{settler['defender_of_catan']}}</td>
-                            <td>{{settler['knights_strength']}}</td>
-                            <td>{{settler['knights']}}</td>
+                            <td>{{settler_dicts[settler_id]['username']}}</td>
+                            <td>{{settler_dicts[settler_id]['victory_points']}}</td>
+                            <td>{{settler_dicts[settler_id]['longest_road']}}</td>
+                            <td>{{settler_dicts[settler_id]['defender_of_catan']}}</td>
+                            <td>{{settler_dicts[settler_id]['army_strength']}}</td>
+                            <td>{{settler_dicts[settler_id]['knights']}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
