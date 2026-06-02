@@ -19,7 +19,7 @@ def new_game():
 
 @bp.route('/continue_game')
 def continue_game():
-    game_progress = get_game_progress.get_game_progress()
+    game_progress = get_game_progress.get_game_progress()["progress"]
     
     if game_progress == "game in progress":
         return redirect()
