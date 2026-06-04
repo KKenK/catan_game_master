@@ -40,7 +40,8 @@ def game():
 
 @bp.route('/roll_dice')
 def roll_dice():
-    number_of_settlers = len(get_settlers.get_settlers())
+    settlers = get_settlers.get_settlers()
+    number_of_settlers = len(settlers)
 
     game_progress = get_settler_turn.get()
     settler_turn = game_progress['settler_turn']
@@ -56,4 +57,4 @@ def roll_dice():
 
     update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
 
-    return render_template('roll_dice.html', settler_turn = settler_turn, is_settler_two = is_settler_two)
+    return render_template('roll_dice.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
