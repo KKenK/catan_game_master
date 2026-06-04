@@ -9,7 +9,6 @@ bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 def game():
     
     if get_game_progress.get_game_progress() != "game_in_progress":
-            update_settler_turn.update_settler_turn(1)
             update_game_progress.update_game_progress("game_in_progress")
 
     settlers = get_settlers.get_settlers()
@@ -42,6 +41,6 @@ def game():
 @bp.route('/roll_dice')
 def roll_dice():
     number_of_settlers = len(get_settlers.get_settlers())
-    print(number_of_settlers)
+
     return render_template('roll_dice.html')
 
