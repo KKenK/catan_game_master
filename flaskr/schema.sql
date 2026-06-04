@@ -1,7 +1,7 @@
 CREATE TABLE game_progress (
 	progress TEXT,
     settler_turn INTEGER DEFAULT 0 NOT NULL,
-    is_settler_one INTEGER DEFAULT 0 NOT NULL
+    is_settler_two INTEGER DEFAULT 0 NOT NULL
 );
 INSERT INTO 'game_progress' (progress) VALUES ('uninitialised');
 
