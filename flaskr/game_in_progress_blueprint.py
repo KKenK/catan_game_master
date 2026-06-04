@@ -56,4 +56,4 @@ def roll_dice():
 
     update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
 
-    return render_template('roll_dice.html')
+    return render_template('roll_dice.html', settler_turn = settler_turn, is_settler_two = is_settler_two)
