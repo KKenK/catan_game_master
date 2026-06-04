@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settlers, get_knights, get_settlements, update_game_progress, update_settler_turn
+from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_settlements, update_game_progress, update_settler_turn
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -30,7 +30,6 @@ def game():
     settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
     print (f"settler_dict: {settlers_dict}")
 
-    
     for settler in settlers:
 
         settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
@@ -39,3 +38,10 @@ def game():
     settlements = get_settlements.get_settlements()
 
     return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict)
+
+@bp.route('/roll_dice')
+def roll_dice():
+    number_of_settlers = len(get_settlers.get_settlers())
+    print(number_of_settlers)
+    return render_template('roll_dice.html')
+
