@@ -17,17 +17,17 @@ def game():
     print(f"knights: {knights}")
 
     knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
-    print(f"knights_settler_ids: {knights_settler_ids}")
+    #print(f"knights_settler_ids: {knights_settler_ids}")
 
     list_of_active_knights_by_settler_id = [[knight['level'] for knight in knights if knight['settler_id'] == knight_settler_id and knight['is_active']] for knight_settler_id in knights_settler_ids]
-    print(f"list_of_active_knights_by_settler_id: {list_of_active_knights_by_settler_id}")
+    #print(f"list_of_active_knights_by_settler_id: {list_of_active_knights_by_settler_id}")
     
     knight_strength_dict = {knights_settler_ids[i] : sum(list_of_active_knights_by_settler_id[i]) for i in range(len(knights_settler_ids))}
-    print(f"knight_strength_dict: {knight_strength_dict}")
+    #print(f"knight_strength_dict: {knight_strength_dict}")
     
     settler_table_keys = list(settlers[0].keys())
     settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
-    print (f"settler_dict: {settlers_dict}")
+    #print (f"settler_dict: {settlers_dict}")
 
     for settler in settlers:
 
@@ -42,5 +42,18 @@ def game():
 def roll_dice():
     number_of_settlers = len(get_settlers.get_settlers())
 
-    return render_template('roll_dice.html')
+    game_progress = get_settler_turn.get()
+    settler_turn = game_progress['settler_turn']
+    is_settler_two = game_progress['is_settler_two']
 
+    if number_of_settlers > 4:
+        is_settler_two = 1 if not is_settler_two else 0
+
+    settler_turn += 3 if is_settler_two else 1
+
+    if settler_turn >= number_of_settlers:
+            settler_turn -= number_of_settlers
+
+    update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
+
+    return render_template('roll_dice.html')
