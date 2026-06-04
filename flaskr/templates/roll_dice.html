@@ -2,10 +2,25 @@
 
     {% block body %}
         <header>
-            <h1>TODO: Rolling Dice</h1>
+            <h1>{{username}}'s Turn!</h1>
         </header>
-        <main>
-
+				
+				<main>
+    		{% if not is_settler_two %}
+						<form action="/collect_resources" method ="post">
+            	  <div>
+            		    <label for="dice_roll">Enter Dice Roll:</label>
+                  	<input type="number" id="dice_roll" name="dice_roll" min="2" max="12">
+            		</div>
+              	<div>
+	                  <button type="submit">Enter</button>
+              	</div>
+          	</form>
+        {% else %}
+          	<a href="/game">Proceed</a>
+    		{% endif %}
         </main>
-    {% endblock %}
+		{% endblock %}
 
+    
+    
