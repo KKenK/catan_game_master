@@ -38,8 +38,8 @@ def game():
 
     return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict)
 
-@bp.route('/roll_dice')
-def roll_dice():
+@bp.route('/start_turn')
+def start_turn():
     settlers = get_settlers.get_settlers()
     number_of_settlers = len(settlers)
 
@@ -57,4 +57,4 @@ def roll_dice():
 
     update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
 
-    return render_template('roll_dice.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
+    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
