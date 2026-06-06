@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commoities, get_settlements, update_game_progress, update_settler_turn
+from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, update_game_progress, update_settler_turn
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -61,16 +61,36 @@ def start_turn():
 
 @bp.route('/collect_resources', methods=['GET', 'POST'])
 def collect_resources():
-    number_rolled = request.form['dice_roll']
-
+    number_rolled = int(request.form['dice_roll'])
+    print(f"number rolled is {number_rolled}")
+    settlers = get_settlers.get_settlers()
     settlements = get_settlements.get_settlements()
 
-    settlements_dict = {settlement['id']: {'settler_id' : settlement['settler_id'],
-                                           settlement['roll_1']: settlement['resource_1'],
-                                           settlement['roll_2']: settlement['resource_2'],
-                                           settlement['roll_3']: settlement['resource_3']}
+    settlements_dict = {settlement['id']: {'settler_id': settlement['settler_id'],
+                                           'rolls': [(settlement['roll_1'], settlement['resource_1']),
+                                           (settlement['roll_2'], settlement['resource_2']),
+                                           (settlement['roll_3'], settlement['resource_3'])],
+                                           'is_city': settlement['is_city']}
                                            for settlement in settlements}
-    print(f"settlement_dicts: {settlements_dict}")
+
+    resources_and_commodities = get_resources_and_commodities.get_resources_and_commodities()
+    resources_and_commodities_dict = {item['id']: {'settlement': item[1], 'city': item[2]} for item in resources_and_commodities}
+
+    items_to_collect = {settler['id'] : [] for settler in settlers}
+    
+    for settler in settlers:
+
+        for settlement in settlements_dict.values():
+
+            if settler['id'] != settlement['settler_id']:
+                continue
+
+            for roll in settlement['rolls']:
+                if roll[0] != number_rolled:
+                      continue
+
+                items_to_collect[settler['id']].append(resources_and_commodities_dict[roll[1]]['settlement']) if not settlement['is_city'] else items_to_collect[settler['id']].extend([resources_and_commodities_dict[roll[1]]['settlement'], resources_and_commodities_dict[roll[1]]['city']])
+    print(items_to_collect)         
     
     return render_template('collect_resources.html')
          
