@@ -18,11 +18,11 @@ CREATE TABLE settlers (
 CREATE TABLE settlements (
     id INTEGER PRIMARY KEY,
     settler_id INTEGER NOT NULL,
-    resource_1 TEXT,
+    resource_1 INTEGER,
     roll_1 INTEGER,
-    resource_2 TEXT,
+    resource_2 INTEGER,
     roll_2 INTEGER,
-    resource_3 TEXT,
+    resource_3 INTEGER,
     roll_3 INTEGER,
     is_city INTEGER,
     FOREIGN KEY (settler_id) REFERENCES settlers(id)
