@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_settlements, update_game_progress, update_settler_turn
+from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commoities, get_settlements, update_game_progress, update_settler_turn
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -58,3 +58,19 @@ def start_turn():
     update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
 
     return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
+
+@bp.route('/collect_resources', methods=['GET', 'POST'])
+def collect_resources():
+    number_rolled = request.form['dice_roll']
+
+    settlements = get_settlements.get_settlements()
+
+    settlements_dict = {settlement['id']: {'settler_id' : settlement['settler_id'],
+                                           settlement['roll_1']: settlement['resource_1'],
+                                           settlement['roll_2']: settlement['resource_2'],
+                                           settlement['roll_3']: settlement['resource_3']}
+                                           for settlement in settlements}
+    print(f"settlement_dicts: {settlements_dict}")
+    
+    return render_template('collect_resources.html')
+         
