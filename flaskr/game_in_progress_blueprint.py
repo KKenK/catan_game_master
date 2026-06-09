@@ -49,10 +49,12 @@ def start_turn():
 
     settlers = get_settlers.get_settlers()
 
-    if get_game_progress.get_game_progress() == "start_turn":
+    if get_game_progress.get_game_progress() == 'start_turn':
         
         return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
-        
+    
+    update_game_progress.update_game_progress('start_turn')
+    
     number_of_settlers = len(settlers)
 
     if number_of_settlers > 4:

@@ -21,7 +21,7 @@ def new_game():
 def continue_game():
     game_progress = get_game_progress.get_game_progress()["progress"]
     
-    if game_progress == "game in progress":
+    if game_progress == 'game in progress':
         return redirect()
     elif game_progress == "settler registeration":
         return redirect('/initialise_players/register_settler')
@@ -32,6 +32,6 @@ def continue_game():
     elif game_progress == "game_in_progress":
         return redirect('/game')
     elif game_progress == "start_turn":
-        return redirect('/game/start')
+        return redirect('/game/start_turn')
     else:
         return redirect('/')
