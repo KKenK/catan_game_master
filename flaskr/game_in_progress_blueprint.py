@@ -59,7 +59,7 @@ def start_turn():
 
     return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
 
-@bp.route('/collect_resources', methods=['GET', 'POST'])
+@bp.route('/collect_resources', methods=['POST'])
 def collect_resources():
     number_rolled = int(request.form['dice_roll'])
     print(f"number rolled is {number_rolled}")
