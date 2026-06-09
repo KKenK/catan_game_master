@@ -31,5 +31,7 @@ def continue_game():
         return redirect('/initialise_board/place_city')
     elif game_progress == "game_in_progress":
         return redirect('/game')
+    elif game_progress == "start_turn":
+        return redirect('/game/start')
     else:
         return redirect('/')
