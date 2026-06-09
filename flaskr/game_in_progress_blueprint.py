@@ -76,21 +76,24 @@ def collect_resources():
     resources_and_commodities = get_resources_and_commodities.get_resources_and_commodities()
     resources_and_commodities_dict = {item['id']: {'settlement': item[1], 'city': item[2]} for item in resources_and_commodities}
 
-    items_to_collect = {settler['id'] : [] for settler in settlers}
-    
+    settlers_to_collect_dict = {settler['id'] : [] for settler in settlers}
+  
     for settler in settlers:
-
-        for settlement in settlements_dict.values():
-
+        
+        items_to_collect_list = []
+        
+        for settlement in settlements_dict.values(): 
+            
             if settler['id'] != settlement['settler_id']:
                 continue
-
+                
             for roll in settlement['rolls']:
                 if roll[0] != number_rolled:
                       continue
 
-                items_to_collect[settler['id']].append(resources_and_commodities_dict[roll[1]]['settlement']) if not settlement['is_city'] else items_to_collect[settler['id']].extend([resources_and_commodities_dict[roll[1]]['settlement'], resources_and_commodities_dict[roll[1]]['city']])
-    print(items_to_collect)         
+                items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['settlement']) if not settlement['is_city'] else items_to_collect_list.extend([resources_and_commodities_dict[roll[1]]['settlement'], resources_and_commodities_dict[roll[1]]['city']])
     
-    return render_template('collect_resources.html')
-         
+        settlers_to_collect_dict[settler['id']] = {item : items_to_collect_list.count(item) for item in set(items_to_collect_list)}
+    
+    print(settlers_to_collect_dict)     
+        

@@ -2,9 +2,28 @@
 
     {% block body %}
         <header>
-            <h1>TODO: Collect Resources</h1>
+            <h1>Collect Resources</h1>
         </header>
         <main>
-
+            <table>
+                <thead>
+                    <th>Settler</th>
+                    <th>Collect</th>
+                </thead>
+                <tbody>
+                    {% for settler in settlers_to_collect_dict %}
+                    <tr>
+                        <td>{{settlers[settler]['username']}}</td>
+                        <td>
+                            {% for item in settlers_to_collect_dict[settler].items() %}
+                                {{item[0]}} x {{item[1]}}
+                            {% endfor%}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+            
         </main>
     {% endblock %}
