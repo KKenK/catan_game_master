@@ -40,12 +40,20 @@ def game():
 
 @bp.route('/start_turn')
 def start_turn():
-    settlers = get_settlers.get_settlers()
-    number_of_settlers = len(settlers)
 
     game_progress = get_settler_turn.get()
+
     settler_turn = game_progress['settler_turn']
+
     is_settler_two = game_progress['is_settler_two']
+
+    settlers = get_settlers.get_settlers()
+
+    if get_game_progress.get_game_progress() == "start_turn":
+        
+        return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
+        
+    number_of_settlers = len(settlers)
 
     if number_of_settlers > 4:
         is_settler_two = 1 if not is_settler_two else 0
@@ -53,7 +61,7 @@ def start_turn():
     settler_turn += 3 if is_settler_two else 1
 
     if settler_turn >= number_of_settlers:
-            settler_turn -= number_of_settlers
+        settler_turn -= number_of_settlers
 
     update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
 
@@ -61,9 +69,11 @@ def start_turn():
 
 @bp.route('/collect_resources', methods=['POST'])
 def collect_resources():
+    
     number_rolled = int(request.form['dice_roll'])
-    print(f"number rolled is {number_rolled}")
+    
     settlers = get_settlers.get_settlers()
+    
     settlements = get_settlements.get_settlements()
 
     settlements_dict = {settlement['id']: {'settler_id': settlement['settler_id'],
