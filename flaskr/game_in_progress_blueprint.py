@@ -106,11 +106,17 @@ def collect_resources():
                 items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['settlement'])
                 
                 if settlement['is_city']:
-                  	items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['city'])    
+                    items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['city'])    
         
         settlers_to_collect_dict[settler['id']] = {item : items_to_collect_list.count(item) for item in set(items_to_collect_list)}
     
     print(settlers_to_collect_dict)     
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
-      
+
+@bp.route('/activate_knight/<int:knight_id>')
+def activate_knight(knight_id):
+  	
+    activate_knight.activate_knight(knight_id)
+  
+    return game()
