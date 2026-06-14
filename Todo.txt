@@ -5,6 +5,15 @@ C:\Users\kylek\Documents\web-projects\catan_game_master\flaskr\templates\index_p
 1 - Add link for new game which clears tables.
 2 - Add link for continue which goes to the current game.
 
+flaskr\game_in_progress_blueprint.py
+1 - Create a separate game route for the first turn.
+2 - Implement knights in the settler_dicts
+3 - Implement knights links for activating knights.
+@bp.route('/game', defaults={'knight_id': None})
+@bp.route('/game/<int:knight_id>')
+def game(knight_id):
+    if knight_id != None:
+      	pass
 
 Continue link/button using game_progress keywords to determine current game state redirect.
 Clearing all tables except for game progress table.

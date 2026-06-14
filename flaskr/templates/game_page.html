@@ -28,10 +28,10 @@
                                 {% for knight in settler_dicts[settler_id]['knights'] %}
                                     {% if knight['is_active'] %}
                                         <input checked disabled type="checkbox">
-                                        <a href="/disable_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
+                                        <a href="disable_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
                                     {% else %}
                                         <input disabled type="checkbox">
-                                      	<a href="/activate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
+                                      	<a href="activate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
                                     {% endif %}
                                 {% endfor %}
                             </td>
