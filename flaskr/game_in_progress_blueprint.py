@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, update_game_progress, update_settler_turn
+from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, update_game_progress, update_settler_turn, activate_knight
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -32,7 +32,7 @@ def game():
     for settler in settlers:
 
         settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
-        settlers_dict[settler['id']]['knights'] = "None"
+        settlers_dict[settler['id']]['knights'] = [knight for knight in knights if knight['settler_id'] == settler['id']]
 
     settlements = get_settlements.get_settlements()
 
@@ -115,7 +115,7 @@ def collect_resources():
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
 
 @bp.route('/activate_knight/<int:knight_id>')
-def activate_knight(knight_id):
+def knight_activation(knight_id):
   	
     activate_knight.activate_knight(knight_id)
   
