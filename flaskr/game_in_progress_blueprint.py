@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, update_game_progress, update_settler_turn, activate_knight
+from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, update_game_progress, update_settler_turn, insert_knight_into_knight_table, activate_knight, deactivate_knight
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -114,9 +114,25 @@ def collect_resources():
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
 
+@bp.route('/build_knight')
+def build_knight():
+
+    settler_turn_id = get_settler_turn.get()['settler_turn']
+
+    insert_knight_into_knight_table.insert_knight(settler_turn_id)
+
+    return game()
+
 @bp.route('/activate_knight/<int:knight_id>')
 def knight_activation(knight_id):
   	
     activate_knight.activate_knight(knight_id)
+  
+    return game()
+
+@bp.route('/deactivate_knight/<int:knight_id>')
+def knight_deactivation(knight_id):
+  	
+    deactivate_knight.deactivate_knight(knight_id)
   
     return game()
