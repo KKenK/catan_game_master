@@ -132,7 +132,8 @@ def collect_resources():
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
 
-def place_settlement():
+@bp.route('/build_settlement')
+def build_settlement():
     
     settlers = get_settlers.get_settlers()
 
@@ -152,7 +153,7 @@ def place_settlement():
     
 
     return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id]['username'],
-                        have_all_settlers_placed_a_settlement = False,
+
                         resources = resources)      
 
 @bp.route('/build_knight/<int:knight_id>')
