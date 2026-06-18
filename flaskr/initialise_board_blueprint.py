@@ -40,7 +40,7 @@ def place_settlement():
                         have_all_settlers_placed_a_settlement = False,
                         resources = resources)      
     else:
-        return render_template('initialise_board/place_settlement.html', 
+        return render_template('place_settlement.html', 
                         have_all_settlers_placed_a_settlement = True,
                         resources = resources)
 
