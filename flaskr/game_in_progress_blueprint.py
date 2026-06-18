@@ -132,10 +132,20 @@ def collect_resources():
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
 
-@bp.route('/place_settlement')
-def place_settlement():
+@bp.route('/build_settlement')
+def build_settlement():
+    
+    settler_turn_id = get_settler_turn.get()['settler_turn']  
     
     settlers = get_settlers.get_settlers()
+    
+    resources = get_resources.get_resources()  
+
+    return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id]['username'],
+                        have_all_settlers_placed_a_settlement = False,
+                        resources = resources)    
+@bp.route('/place_settlement', methods=['POST'])
+def place_settlement():
 
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
@@ -148,13 +158,8 @@ def place_settlement():
             'is_city': False})
         
     increment_victory_points.increment_victory_points(settler_turn_id)
-    
-    resources = get_resources.get_resources()  
-    
 
-    return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id]['username'],
-
-                        resources = resources)      
+    return game()
 
 @bp.route('/build_knight/<int:knight_id>')
 def build_knight(knight_id):
