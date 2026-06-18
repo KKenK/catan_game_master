@@ -1,7 +1,21 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, calculate_row_id, update_game_progress, update_settler_turn, insert_knight_into_knight_table, activate_knight, deactivate_knight
+from .helper_modules import (get_game_progress, 
+                             get_settler_turn, 
+                             get_settlers, 
+                             get_knights, 
+                             get_resources_and_commodities, 
+                             get_settlements, 
+                             calculate_row_id, 
+                             update_game_progress,
+                             update_settler_turn,
+                             insert_knight_into_knight_table,
+                             activate_knight,
+                             deactivate_knight,
+                             insert_settlement_into_settlements_table,
+                             increment_victory_points,
+                             get_resources)
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -39,7 +53,7 @@ def game():
 
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
-    
+
     return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
@@ -117,6 +131,29 @@ def collect_resources():
     print(settlers_to_collect_dict)     
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
+
+def place_settlement():
+    
+    settlers = get_settlers.get_settlers()
+
+    settler_turn_id = get_settler_turn.get()['settler_turn']
+
+    settlement_id = calculate_row_id.calculate_row_id("settlements")
+    insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
+            'settler_id': settler_turn_id,
+            'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
+            'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
+            'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
+            'is_city': False})
+        
+    increment_victory_points.increment_victory_points(settler_turn_id)
+    
+    resources = get_resources.get_resources()  
+    
+
+    return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id]['username'],
+                        have_all_settlers_placed_a_settlement = False,
+                        resources = resources)      
 
 @bp.route('/build_knight/<int:knight_id>')
 def build_knight(knight_id):
