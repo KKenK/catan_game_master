@@ -132,8 +132,8 @@ def collect_resources():
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
 
-@bp.route('/build_settlement')
-def build_settlement():
+@bp.route('/place_settlement')
+def place_settlement():
     
     settlers = get_settlers.get_settlers()
 
