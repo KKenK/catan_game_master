@@ -36,8 +36,11 @@ def game():
         settlers_dict[settler['id']]['knights'] = [knight for knight in knights if knight['settler_id'] == settler['id']]
 
     settlements = get_settlements.get_settlements()
-
-    return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built)
+    current_path = request.path
+    current_path_split = current_path.split('/')
+    route_is_game_index = True if not current_path_split[-1].isdigit() else False
+    link_prefix = '' if route_is_game_index else '../'
+    return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
 def start_turn():

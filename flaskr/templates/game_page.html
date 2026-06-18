@@ -28,10 +28,10 @@
                                 {% for knight in settler_dicts[settler_id]['knights'] %}
                                     {% if knight['is_active'] %}
                                         <input checked disabled type="checkbox">
-                                        <a href="deactivate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
+                                        <a href="{{link_prefix}}deactivate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
                                     {% else %}
                                         <input disabled type="checkbox">
-                                      	<a href="activate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
+                                      	<a href="{{link_prefix}}activate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
                                     {% endif %}
                                 {% endfor %}
                             </td>
@@ -42,9 +42,9 @@
             <div>
               	<a href="">Build Settlement</a>
                 <a href="">Promote Settlement</a>
-                <a href="build_knight/{{id_of_next_knight_to_be_built}}">Build Knight</a>
-                <a href="start_turn">End Turn</a>
-                <a href="..">Return</a>
+                <a href="{{link_prefix}}build_knight/{{id_of_next_knight_to_be_built}}">Build Knight</a>
+                <a href="{{link_prefix}}start_turn">End Turn</a>
+                <a href="{{link_prefix}}..">Return</a>
             </div>
         </main>
     {% endblock %}
