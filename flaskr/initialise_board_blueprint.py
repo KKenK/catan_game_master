@@ -6,7 +6,8 @@ from .helper_modules import (get_settlers,
                             get_resources,
                             update_game_progress, 
                             insert_settlement_into_settlements_table,
-                            increment_victory_points)
+                            increment_victory_points,
+                            calculate_row_id)
 
 bp = Blueprint('initialise_board', __name__, url_prefix='/initialise_board/')
 
@@ -22,8 +23,9 @@ def place_settlement():
     if request.method == 'POST':
 
         current_settler = settlers_with_no_victory_points.pop(0)
-
-        insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settler_id': current_settler['id'],
+        settlement_id = calculate_row_id.calculate_row_id("settlements")
+        insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
+                'settler_id': current_settler['id'],
                 'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
                 'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
                 'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
@@ -54,8 +56,9 @@ def place_city():
     if request.method == 'POST':
 
         current_settler = settlers_with_one_victory_points.pop()
-
-        insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settler_id': current_settler['id'],
+        settlement_id = calculate_row_id.calculate_row_id("settlements")
+        insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
+                'settler_id': current_settler['id'],
                 'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
                 'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
                 'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],

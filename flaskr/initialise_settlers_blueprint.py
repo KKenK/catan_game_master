@@ -16,8 +16,8 @@ def register_settlers():
 
     if request.method == 'POST':
         settler_name = request.form['name']
-
-        insert_settler_into_settlers_table.insert_settler_into_settlers_table(settler_name)
+        settler_id = calculate_row_id.calculate_row_id("settlers")
+        insert_settler_into_settlers_table.insert_settler_into_settlers_table(settler_name, settler_id)
     
     next_settler_id = calculate_row_id.calculate_row_id('settlers')
     

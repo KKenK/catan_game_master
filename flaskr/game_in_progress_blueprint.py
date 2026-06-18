@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, update_game_progress, update_settler_turn, insert_knight_into_knight_table, activate_knight, deactivate_knight
+from .helper_modules import get_game_progress, get_settler_turn, get_settlers, get_knights, get_resources_and_commodities, get_settlements, calculate_row_id, update_game_progress, update_settler_turn, insert_knight_into_knight_table, activate_knight, deactivate_knight
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -14,7 +14,6 @@ def game():
     settlers = get_settlers.get_settlers()
     settler_ids = sorted([settler['id'] for settler in settlers])
     knights = get_knights.get_knights()
-    print(f"knights: {knights}")
 
     knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
     #print(f"knights_settler_ids: {knights_settler_ids}")
@@ -22,6 +21,8 @@ def game():
     list_of_active_knights_by_settler_id = [[knight['level'] for knight in knights if knight['settler_id'] == knight_settler_id and knight['is_active']] for knight_settler_id in knights_settler_ids]
     #print(f"list_of_active_knights_by_settler_id: {list_of_active_knights_by_settler_id}")
     
+    id_of_next_knight_to_be_built = len(knights)
+
     knight_strength_dict = {knights_settler_ids[i] : sum(list_of_active_knights_by_settler_id[i]) for i in range(len(knights_settler_ids))}
     #print(f"knight_strength_dict: {knight_strength_dict}")
     
@@ -36,7 +37,7 @@ def game():
 
     settlements = get_settlements.get_settlements()
 
-    return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict)
+    return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built)
 
 @bp.route('/start_turn')
 def start_turn():
@@ -114,12 +115,12 @@ def collect_resources():
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
 
-@bp.route('/build_knight')
-def build_knight():
-
+@bp.route('/build_knight/<int:knight_id>')
+def build_knight(knight_id):
+        
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
-    insert_knight_into_knight_table.insert_knight(settler_turn_id)
+    insert_knight_into_knight_table.insert_knight(settler_turn_id, knight_id)
 
     return game()
 
