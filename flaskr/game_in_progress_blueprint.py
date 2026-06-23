@@ -183,3 +183,15 @@ def knight_deactivation(knight_id):
     deactivate_knight.deactivate_knight(knight_id)
   
     return game()
+
+@bp.route('select_settlement_to_promote')
+def select_settlement_to_promote():
+
+    settler_turn_id = get_settler_turn.get()['settler_turn']
+
+    settlements = get_settlements.get_settlements()
+
+    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements if settlements['settler_id'] == settler_turn_id]
+
+    return render_template('select_settlement.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
+
