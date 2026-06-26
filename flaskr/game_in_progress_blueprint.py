@@ -16,7 +16,8 @@ from .helper_modules import (get_game_progress,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
                              increment_victory_points,
-                             get_resources)
+                             get_resources,
+                             update_is_city_column_of_settlement_to_true)
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -198,5 +199,9 @@ def select_settlement_to_promote():
 
 @bp.route('/promote_settlement/<int:settlement_id>')
 def promote_settlement(settlement_id):
+    
+    update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
+
+    increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
     
     return game()
