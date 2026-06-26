@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        <header>
+            <h1>Select Knights To Promote</h1>
+        </header>
+        <main>
+            <form action="promote_knight" method="post">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Knight Strength</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for knight in current_settlers_turn_knights %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name ="{{knight['id']}}"> 
+                                </td>
+                                <td>{{knight['level']}}</td>
+                                <td>{{knight['is_active']}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">Promote!</button>
+            </form>
+        </main>
+    {% endblock %}
