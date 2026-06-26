@@ -172,6 +172,18 @@ def build_knight(knight_id):
 
     return game()
 
+@bp.route('/select_knights_to_promote')
+def select_knights_to_promote():
+    knights = get_knights.get_knights()
+
+    current_settlers_turn_knights = [knight for knight in knights if knight['settler_id'] == get_settler_turn.get()['settler_turn']]
+    
+    return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights)
+
+@bp.route('/promote_knight', methods=['POST'])
+def promote_knight():
+    pass
+
 @bp.route('/activate_knight/<int:knight_id>')
 def knight_activation(knight_id):
   	
@@ -203,5 +215,5 @@ def promote_settlement(settlement_id):
     update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
 
     increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
-    
+
     return game()
