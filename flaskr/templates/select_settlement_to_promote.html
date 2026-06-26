@@ -18,17 +18,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for settlement in settlements %}
+                    {% for settlement in settler_whose_turn_it_is_settlements %}
                         <tr>
                             <td>
-                                <a href="../promote_settlement/{{settlement['id']}}">Select</a> 
+                                <a href="promote_settlement/{{settlement['id']}}">Select</a> 
                             </td>
                             <td>{{settlement['roll_1']}}</td>
-                            <td>{{settlement['resource_1']}}</td>
+                            <td>{{settlement['resource_1_text']}}</td>
                             <td>{{settlement['roll_2']}}</td>
-                            <td>{{settlement['resource_2']}}</td>
+                            <td>{{settlement['resource_2_text']}}</td>
                             <td>{{settlement['roll_3']}}</td>
-                            <td>{{settlement['resource_3']}}</td>
+                            <td>{{settlement['resource_3_text']}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

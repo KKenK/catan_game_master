@@ -6,7 +6,8 @@ from .helper_modules import (get_game_progress,
                              get_settlers, 
                              get_knights, 
                              get_resources_and_commodities, 
-                             get_settlements, 
+                             get_settlements,
+                             get_settlements_with_resource_name,
                              calculate_row_id, 
                              update_game_progress,
                              update_settler_turn,
@@ -189,9 +190,13 @@ def select_settlement_to_promote():
 
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
-    settlements = get_settlements.get_settlements()
+    settlements_with_resource_name = get_settlements_with_resource_name.get_settlements_with_resource_name()
 
-    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements if settlements['settler_id'] == settler_turn_id]
+    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id]
 
-    return render_template('select_settlement.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
+    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
 
+@bp.route('/promote_settlement/<int:settlement_id>')
+def promote_settlement(settlement_id):
+    
+    return game()
