@@ -16,6 +16,7 @@ from .helper_modules import (get_game_progress,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
                              increment_victory_points,
+                             increment_knights_level,
                              get_resources,
                              update_is_city_column_of_settlement_to_true)
 
@@ -182,7 +183,12 @@ def select_knights_to_promote():
 
 @bp.route('/promote_knight', methods=['POST'])
 def promote_knight():
-    pass
+    
+    knight_ids = [knight_id for knight_id in request.form.values()]
+    
+    increment_knights_level.increment_knights_level(tuple(knight_ids))
+    
+    return game()
 
 @bp.route('/activate_knight/<int:knight_id>')
 def knight_activation(knight_id):
