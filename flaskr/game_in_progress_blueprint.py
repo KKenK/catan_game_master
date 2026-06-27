@@ -1,7 +1,8 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import (get_game_progress, 
+from .helper_modules import (get_game_progress,
+                             get_game_progress_data, 
                              get_settler_turn, 
                              get_settlers, 
                              get_knights, 
@@ -25,12 +26,14 @@ bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 @bp.route('/')
 def game():
     
-    if get_game_progress.get_game_progress() != "game_in_progress":
+    game_progress = get_game_progress_data.get_game_progress_data()
+    print(game_progress)
+    if game_progress['progress'] != "game_in_progress":
             update_game_progress.update_game_progress("game_in_progress")
 
     settlers = get_settlers.get_settlers()
     
-    settler_turn_id = get_settler_turn.get()['settler_turn']  
+    settler_turn_id = game_progress['settler_turn']
     settlers_turn_username =  settlers[settler_turn_id]['username']
     print(settlers_turn_username)
 
@@ -64,11 +67,10 @@ def game():
 
     barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
 
-
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
 
-    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
+    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarian_distance_from_catan = game_progress['barbarian_distance_from_catan'], settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
 def start_turn():
