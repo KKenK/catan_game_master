@@ -29,7 +29,13 @@ def game():
             update_game_progress.update_game_progress("game_in_progress")
 
     settlers = get_settlers.get_settlers()
+    
+    settler_turn_id = get_settler_turn.get()['settler_turn']  
+    settlers_turn_username =  settlers[settler_turn_id]['username']
+    print(settlers_turn_username)
+
     settler_ids = sorted([settler['id'] for settler in settlers])
+
     knights = get_knights.get_knights()
 
     knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
@@ -58,10 +64,11 @@ def game():
 
     barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
 
+
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
 
-    return render_template('game_page.html', settler_ids = settler_ids, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
+    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
 def start_turn():
