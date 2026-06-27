@@ -2,7 +2,7 @@ from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
 from .helper_modules import (get_game_progress,
-                             get_game_progress_data, 
+                             get_game_progress_data,
                              get_settler_turn, 
                              get_settlers, 
                              get_knights, 
@@ -18,6 +18,7 @@ from .helper_modules import (get_game_progress,
                              insert_settlement_into_settlements_table,
                              increment_victory_points,
                              increment_knights_level,
+                             decrement_the_barbarians_distance_from_catan,
                              get_resources,
                              update_is_city_column_of_settlement_to_true)
 
@@ -27,7 +28,7 @@ bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 def game():
     
     game_progress = get_game_progress_data.get_game_progress_data()
-    print(game_progress)
+
     if game_progress['progress'] != "game_in_progress":
             update_game_progress.update_game_progress("game_in_progress")
 
@@ -35,7 +36,6 @@ def game():
     
     settler_turn_id = game_progress['settler_turn']
     settlers_turn_username =  settlers[settler_turn_id]['username']
-    print(settlers_turn_username)
 
     settler_ids = sorted([settler['id'] for settler in settlers])
 
@@ -70,7 +70,7 @@ def game():
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
 
-    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarian_distance_from_catan = game_progress['barbarian_distance_from_catan'], settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
+    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarians_distance_from_catan = game_progress['barbarians_distance_from_catan'], settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
 def start_turn():
@@ -106,6 +106,14 @@ def start_turn():
 @bp.route('/collect_resources', methods=['POST'])
 def collect_resources():
     
+    event_rolled = request.form['event_dice_roll']
+    
+    print(event_rolled)
+    
+    if event_rolled == 'barbarian_ship':
+        
+        decrement_the_barbarians_distance_from_catan.decrement_the_barbarians_distance_from_catan()
+
     number_rolled = int(request.form['dice_roll'])
     
     settlers = get_settlers.get_settlers()
