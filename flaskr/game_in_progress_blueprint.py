@@ -42,7 +42,7 @@ def game():
 
     knight_strength_dict = {knights_settler_ids[i] : sum(list_of_active_knights_by_settler_id[i]) for i in range(len(knights_settler_ids))}
     #print(f"knight_strength_dict: {knight_strength_dict}")
-    
+
     settler_table_keys = list(settlers[0].keys())
     settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
     #print (f"settler_dict: {settlers_dict}")
@@ -54,10 +54,14 @@ def game():
 
     settlements = get_settlements.get_settlements()
 
+    active_knights_count = sum(knight_strength_dict.values())
+
+    barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
+
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
 
-    return render_template('game_page.html', settler_ids = settler_ids, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
+    return render_template('game_page.html', settler_ids = settler_ids, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
 def start_turn():
@@ -187,7 +191,7 @@ def promote_knight():
     knight_ids = [knight_id for knight_id in request.form.values()]
     
     increment_knights_level.increment_knights_level(tuple(knight_ids))
-    
+
     return game()
 
 @bp.route('/activate_knight/<int:knight_id>')
