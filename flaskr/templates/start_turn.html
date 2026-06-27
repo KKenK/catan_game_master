@@ -8,9 +8,18 @@
 				<main>
     		{% if not is_settler_two %}
 						<form action="/game/collect_resources" method ="post">
-            	  <div>
+            	  	<div>
             		    <label for="dice_roll">Enter Dice Roll:</label>
-                  	<input type="number" id="dice_roll" name="dice_roll" min="2" max="12">
+                  		<input type="number" id="dice_roll" name="dice_roll" min="2" max="12">
+            		</div>
+		      	  	<div>
+            		    <label for="event_dice_roll">Enter Event Dice Roll:</label>
+                  		<select id="event_dice_roll" name="event_dice_roll">
+							<option value="Barbarians">Barbarian Ship</option>
+							<option value="Trade">Trade</option>
+							<option value="Politics">Politics</option>
+							<option value="Science">Science</option>
+						</select>
             		</div>
               	<div>
 	                  <button type="submit">Enter</button>
