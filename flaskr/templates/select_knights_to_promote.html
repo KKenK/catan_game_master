@@ -20,7 +20,7 @@
                         {% for knight in current_settlers_turn_knights %}
                             <tr>
                                 <td>
-                                    <input type="checkbox" name ="{{knight['id']}}"> 
+                                    <input type="checkbox" name = "{{knight['id']}}" value ="{{knight['id']}}"> 
                                 </td>
                                 <td>{{knight['level']}}</td>
                                 <td>{{knight['is_active']}}</td>
