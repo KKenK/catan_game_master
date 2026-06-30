@@ -24,6 +24,10 @@
                     
                 </tbody>
             </table>
+        {% if not barbarians_attack %}
         <a href="./">Perform actions</a>
+        {% else%}
+        <a href="barbarians_attack">Resolve Barbarian Attack</a>
+        {% endif %}
         </main>
     {% endblock %}
