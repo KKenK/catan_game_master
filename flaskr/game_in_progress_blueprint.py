@@ -108,11 +108,13 @@ def collect_resources():
     
     event_rolled = request.form['event_dice_roll']
     
-    print(event_rolled)
-    
     if event_rolled == 'barbarian_ship':
         
         decrement_the_barbarians_distance_from_catan.decrement_the_barbarians_distance_from_catan()
+
+    barbarians_distance_from_cantan = get_game_progress_data.get_game_progress_data()['barbarians_distance_from_catan']
+
+    barbarians_attack = True if not barbarians_distance_from_cantan else False
 
     number_rolled = int(request.form['dice_roll'])
     
@@ -154,7 +156,7 @@ def collect_resources():
     
     print(settlers_to_collect_dict)     
 
-    return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict)
+    return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict, barbarians_attack = barbarians_attack)
 
 @bp.route('/build_settlement')
 def build_settlement():
