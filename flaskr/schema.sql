@@ -47,7 +47,9 @@ CREATE TABLE city_resources_commodities (
     "name" TEXT NOT NULL
 );
 
-
+CREATE TABLE settlers_that_contributed_least_to_catans_defence (
+    id INTEGER PRIMARY KEY,
+);
 -- rows = db.execute('SELECT ...')
 -- row = (id, settler_id, resource_1_name, roll_1, resource_2_name, roll_2, resource_3_name, roll_3, resource_4_name, resource_5_name, resource_6_name, is_city)
 
