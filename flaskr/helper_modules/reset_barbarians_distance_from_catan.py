@@ -1,6 +1,6 @@
 from .. import db
 
-def reset_the_barbarians_distance_from_catan():
+def reset_barbarians_distance_from_catan():
 
     database_connection = db.get_db()
 
