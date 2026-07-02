@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+    {% if victory_for_catan %}
+        <header>
+            <h1>Victory!!!</h1>
+        </header>
+        <main>
+            {% if not is_tie %}
+                <div>{{settlers_with_largest_army[0]['username']}} is Defender of Catan!</div>
+            {% else %}
+                <div>Collect Progress cards:</div>
+                {% for settler in settlers_with_largest_army %}
+                    <div>{{settler['username']}}</div>
+                {% endfor %}
+            {% endif %}
+        </main>
+    {% else %}
+        <header>
+            <h1>Defeat!!!</h1>
+        </header>
+        <main>
+            <a href ='resolve_defeat'>Resolve Defeat</a>
+        </main>
+    {% endif %}
+    {% endblock %}
