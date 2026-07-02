@@ -158,6 +158,35 @@ def collect_resources():
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict, barbarians_attack = barbarians_attack)
 
+@bp.route('/barbarians_attack')
+def barbarians_attack():
+
+    settlers = get_settlers.get_settlers()
+
+    knights = get_knights.get_knights()
+
+    settler_army_dict = {settler['id'] : sum([knight['level'] for knight in knights if knight['settler_id'] == settler['id'] and knight['is_active']])
+                         for settler in settlers}
+    
+
+    list_of_active_army_strengths = [settler_army_strength for settler_army_strength in settler_army_dict.values()]
+
+    army_strength_of_catan = sum(list_of_active_army_strengths)
+
+    settlements =  get_settlements.get_settlements()
+
+    barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
+
+    victory_for_catan = True if army_strength_of_catan >= barbarian_strength else False
+
+    largest_army = max(list_of_active_army_strengths)
+
+    settlers_with_largest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == largest_army]
+
+    is_tie = True if len(settlers_with_largest_army) > 1 else False
+
+    return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
+
 @bp.route('/build_settlement')
 def build_settlement():
     
@@ -170,6 +199,7 @@ def build_settlement():
     return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id]['username'],
                         have_all_settlers_placed_a_settlement = False,
                         resources = resources)    
+
 @bp.route('/place_settlement', methods=['POST'])
 def place_settlement():
 
