@@ -20,6 +20,7 @@ from .helper_modules import (get_game_progress,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
                              get_resources,
+                             reset_barbarians_distance_from_catan,
                              update_is_city_column_of_settlement_to_true)
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
@@ -161,6 +162,8 @@ def collect_resources():
 @bp.route('/barbarians_attack')
 def barbarians_attack():
 
+    reset_barbarians_distance_from_catan.reset_barbarians_distance_from_catan()
+    
     settlers = get_settlers.get_settlers()
 
     knights = get_knights.get_knights()
