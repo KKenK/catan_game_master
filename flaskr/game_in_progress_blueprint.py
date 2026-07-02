@@ -21,6 +21,7 @@ from .helper_modules import (get_game_progress,
                              decrement_the_barbarians_distance_from_catan,
                              get_resources,
                              reset_barbarians_distance_from_catan,
+                             insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
                              update_is_city_column_of_settlement_to_true)
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
@@ -113,9 +114,9 @@ def collect_resources():
         
         decrement_the_barbarians_distance_from_catan.decrement_the_barbarians_distance_from_catan()
 
-    barbarians_distance_from_cantan = get_game_progress_data.get_game_progress_data()['barbarians_distance_from_catan']
+    barbarians_distance_from_catan = get_game_progress_data.get_game_progress_data()['barbarians_distance_from_catan']
 
-    barbarians_attack = True if not barbarians_distance_from_cantan else False
+    barbarians_attack = True if not barbarians_distance_from_catan else False
 
     number_rolled = int(request.form['dice_roll'])
     
@@ -168,10 +169,11 @@ def barbarians_attack():
 
     knights = get_knights.get_knights()
 
+    settlements = get_settlements.get_settlements()
+
     settler_army_dict = {settler['id'] : sum([knight['level'] for knight in knights if knight['settler_id'] == settler['id'] and knight['is_active']])
                          for settler in settlers}
     
-
     list_of_active_army_strengths = [settler_army_strength for settler_army_strength in settler_army_dict.values()]
 
     army_strength_of_catan = sum(list_of_active_army_strengths)
@@ -182,13 +184,41 @@ def barbarians_attack():
 
     victory_for_catan = True if army_strength_of_catan >= barbarian_strength else False
 
-    largest_army = max(list_of_active_army_strengths)
+    cities = [settlement for settlement in settlements if settlement['is_city']]
 
-    settlers_with_largest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == largest_army]
+    settler_ids_of_settlers_with_cities = set([city['settler_id'] for city in cities])
 
-    is_tie = True if len(settlers_with_largest_army) > 1 else False
+    settler_ids_with_weakest_army_and_cities = []
+        
+    if not victory_for_catan:
 
-    return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
+        sorted(list_of_active_army_strengths)
+        
+        while not settler_ids_with_weakest_army_and_cities:
+
+            weakest_army = list_of_active_army_strengths.pop(0)
+
+            settlers_with_weakest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == weakest_army]
+
+            settler_ids_with_weakest_army_and_cities = [settler['id'] for settler in settlers_with_weakest_army if settler['id'] in settler_ids_of_settlers_with_cities]
+
+            if weakest_army:
+                continue
+            break
+
+        if settler_ids_with_weakest_army_and_cities:
+            insert_settler_into_settlers_that_contributed_least_to_catans_defence_table.insert_settler_into_settlers_that_contributed_least_to_catans_defence_table(settler_ids_with_weakest_army_and_cities)
+
+        return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan)
+
+    else:    
+        largest_army = max(list_of_active_army_strengths)
+
+        settlers_with_largest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == largest_army]
+
+        is_tie = True if len(settlers_with_largest_army) > 1 else False
+
+        return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
 
 @bp.route('/build_settlement')
 def build_settlement():
