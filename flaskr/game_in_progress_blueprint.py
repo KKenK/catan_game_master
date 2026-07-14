@@ -5,9 +5,11 @@ from .helper_modules import (get_game_progress,
                              get_game_progress_data,
                              get_settler_turn, 
                              get_settlers, 
+                             get_settlers_that_contributed_least_to_catans_defence,
                              get_knights, 
                              get_resources_and_commodities, 
                              get_settlements,
+                             get_cities,
                              get_settlements_with_resource_name,
                              calculate_row_id, 
                              update_game_progress,
@@ -22,7 +24,9 @@ from .helper_modules import (get_game_progress,
                              get_resources,
                              reset_barbarians_distance_from_catan,
                              insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
-                             update_is_city_column_of_settlement_to_true)
+                             remove_settler_from_settlers_that_contributed_least_to_catans_defence_table,
+                             update_is_city_column_of_settlement_to_true,
+                             update_is_city_column_of_settlement_to_false)
 
 bp = Blueprint('game_in_progress',__name__, url_prefix='/game')
 
@@ -219,6 +223,30 @@ def barbarians_attack():
         is_tie = True if len(settlers_with_largest_army) > 1 else False
 
         return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
+
+@bp.route('/select_city_to_demote', methods = ['GET','POST'])
+def select_city_to_demote():
+    
+    update_game_progress.update_game_progress('resolving_defeat')
+
+    settlers_who_contributed_least_to_catans_defence = get_settlers_that_contributed_least_to_catans_defence.get_settlers_that_contributed_least_to_catans_defence()
+    
+    if request.method == 'POST' and settlers_who_contributed_least_to_catans_defence:
+        update_is_city_column_of_settlement_to_false.update_is_city_column_of_settlement_to_false(request.form.get('city_id'))
+        remove_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_settler_from_settlers_that_contributed_least_to_catans_defence_table(settlers_who_contributed_least_to_catans_defence[0]['id'])
+    
+    if not settlers_who_contributed_least_to_catans_defence:
+        return render_template('select_city_to_demote.html', defeat_resolved = True)
+    
+    settlers = get_settlers.get_settlers()
+
+    cities = get_cities.get_cities()
+
+    settler_to_demote_city = settlers_who_contributed_least_to_catans_defence[0]
+
+    cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city]
+
+    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city]['username'], cities_of_settler_to_demote = cities_of_settler_to_demote)
 
 @bp.route('/build_settlement')
 def build_settlement():
