@@ -33,5 +33,7 @@ def continue_game():
         return redirect('/game')
     elif game_progress == "start_turn":
         return redirect('/game/start_turn')
+    elif game_progress == "resolving_defeat":
+        return redirect('/game/select_city_to_demote')
     else:
         return redirect('/')
