@@ -1,6 +1,6 @@
 from .. import db
 
-def get_settlements():
+def get_cities():
     
     database_connection = db.get_db()
     
