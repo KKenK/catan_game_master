@@ -232,14 +232,14 @@ def select_city_to_demote():
     
     if request.method == 'POST' and settlers_who_contributed_least_to_catans_defence:
         update_is_city_column_of_settlement_to_false.update_is_city_column_of_settlement_to_false(request.form.get('city_id'))
-        remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_settler_from_settlers_that_contributed_least_to_catans_defence_table(settlers_who_contributed_least_to_catans_defence[0]['id'])
+        remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table(settlers_who_contributed_least_to_catans_defence.pop(0)['id'])
     
     if not settlers_who_contributed_least_to_catans_defence:
         return render_template('select_city_to_demote.html', defeat_resolved = True)
     
     settlers = get_settlers.get_settlers()
 
-    cities = get_cities.get_cities()
+    cities = get_cities.get_cities_with_resource_name()
 
     settler_to_demote_city_id = settlers_who_contributed_least_to_catans_defence[0]['id']
 

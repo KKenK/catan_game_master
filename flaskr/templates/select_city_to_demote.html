@@ -3,7 +3,7 @@
     {% block body %}
         {% if not defeat_resolved %}
             <header>
-                <h1>Select City To Demote</h1>
+                <h1>{{settler_username}} To Select City To Demote</h1>
             </header>
             <main>
                 <form action="select_city_to_demote" method = "post">
@@ -23,7 +23,7 @@
                             {% for city in cities_of_settler_to_demote %}
                                 <tr>
                                     <td>
-                                        <input type="radio" name="city_id" value="{{city['id']}}"> 
+                                        <input type="radio" name="city_id" value="{{city['id']}}" required> 
                                     </td>
                                     <td>{{city['roll_1']}}</td>
                                     <td>{{city['resource_1_text']}}</td>
