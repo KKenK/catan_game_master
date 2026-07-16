@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        {% if not defeat_resolved %}
+            <header>
+                <h1>Select Settlement To Build</h1>
+            </header>
+            <main>
+                <form action="select_city_to_demote" method = "post">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Roll 1</th>
+                                <th>Resource 1</th>
+                                <th>Roll 2</th>
+                                <th>Resource 2</th>
+                                <th>Roll 3</th>
+                                <th>Resource 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for city in cities_of_settler_to_demote %}
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="city_id" value="{{city['id']}}"> 
+                                    </td>
+                                    <td>{{city['roll_1']}}</td>
+                                    <td>{{city['resource_1_text']}}</td>
+                                    <td>{{city['roll_2']}}</td>
+                                    <td>{{city['resource_2_text']}}</td>
+                                    <td>{{city['roll_3']}}</td>
+                                    <td>{{city['resource_3_text']}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="submit">Demote!</button>
+                </form>
+            </main>
+        {% else %}
+            <header>
+                <h1>Defeat Resolved!</h1>
+            </header>
+            <main>
+                <a href = "./">Proceed</a>
+            </main>
+        {% endif %}
+    {% endblock %}
