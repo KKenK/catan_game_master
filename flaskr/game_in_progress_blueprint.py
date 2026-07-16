@@ -24,7 +24,7 @@ from .helper_modules import (get_game_progress,
                              get_resources,
                              reset_barbarians_distance_from_catan,
                              insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
-                             remove_settler_from_settlers_that_contributed_least_to_catans_defence_table,
+                             remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table,
                              update_is_city_column_of_settlement_to_true,
                              update_is_city_column_of_settlement_to_false)
 
@@ -233,7 +233,7 @@ def select_city_to_demote():
     
     if request.method == 'POST' and settlers_who_contributed_least_to_catans_defence:
         update_is_city_column_of_settlement_to_false.update_is_city_column_of_settlement_to_false(request.form.get('city_id'))
-        remove_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_settler_from_settlers_that_contributed_least_to_catans_defence_table(settlers_who_contributed_least_to_catans_defence[0]['id'])
+        remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_settler_from_settlers_that_contributed_least_to_catans_defence_table(settlers_who_contributed_least_to_catans_defence[0]['id'])
     
     if not settlers_who_contributed_least_to_catans_defence:
         return render_template('select_city_to_demote.html', defeat_resolved = True)
@@ -242,11 +242,11 @@ def select_city_to_demote():
 
     cities = get_cities.get_cities()
 
-    settler_to_demote_city = settlers_who_contributed_least_to_catans_defence[0]
+    settler_to_demote_city_id = settlers_who_contributed_least_to_catans_defence[0]['id']
 
-    cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city]
+    cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city_id]
 
-    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city]['username'], cities_of_settler_to_demote = cities_of_settler_to_demote)
+    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city_id]['username'], cities_of_settler_to_demote = cities_of_settler_to_demote)
 
 @bp.route('/build_settlement')
 def build_settlement():
