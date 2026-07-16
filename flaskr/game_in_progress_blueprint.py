@@ -10,7 +10,6 @@ from .helper_modules import (get_game_progress,
                              get_resources_and_commodities, 
                              get_settlements,
                              get_cities,
-                             get_settlements_with_resource_name,
                              calculate_row_id, 
                              update_game_progress,
                              update_settler_turn,
@@ -323,7 +322,7 @@ def select_settlement_to_promote():
 
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
-    settlements_with_resource_name = get_settlements_with_resource_name.get_settlements_with_resource_name()
+    settlements_with_resource_name = get_settlements.get_settlements_with_resource_name()
 
     settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id]
 
