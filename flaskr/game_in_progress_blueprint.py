@@ -17,6 +17,7 @@ from .helper_modules import (get_game_progress,
                              activate_knight,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
+                             decrement_victory_points,
                              increment_victory_points,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
@@ -242,6 +243,8 @@ def select_city_to_demote():
     cities = get_cities.get_cities_with_resource_name()
 
     settler_to_demote_city_id = settlers_who_contributed_least_to_catans_defence[0]['id']
+
+    decrement_victory_points.decrement_victory_points(settler_to_demote_city_id)
 
     cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city_id]
 
