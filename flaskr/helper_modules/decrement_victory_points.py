@@ -1,6 +1,6 @@
 from .. import db
 
-def decrement_victory_points(settler_id, increment_value = -1):
+def decrement_victory_points(settler_id, increment_value = 1):
 
     database_connection = db.get_db()
 
