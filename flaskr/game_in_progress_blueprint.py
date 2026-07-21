@@ -327,7 +327,7 @@ def select_settlement_to_promote():
 
     settlements_with_resource_name = get_settlements.get_settlements_with_resource_name()
 
-    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id]
+    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id and not settlement['is_city']]
 
     return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
 
