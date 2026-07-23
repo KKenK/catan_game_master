@@ -190,7 +190,7 @@ def barbarians_attack():
     victory_for_catan = True if army_strength_of_catan >= barbarian_strength else False
 
     deactivate_knight.deactivate_all_knights()
-    
+
     settler_ids_of_settlers_with_cities = set([city['settler_id'] for city in cities])
     print(f"settlers with cities: {settler_ids_of_settlers_with_cities}")
     settler_ids_with_weakest_army_and_cities = []
@@ -289,6 +289,28 @@ def place_settlement():
 
     return game()
 
+@bp.route('select_settlement_to_promote')
+def select_settlement_to_promote():
+
+    settler_turn_id = get_settler_turn.get()['settler_turn']
+
+    settlements_with_resource_name = get_settlements.get_settlements_with_resource_name()
+
+    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id and not settlement['is_city']]
+
+    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
+
+@bp.route('/promote_settlement', methods=['POST'])
+def promote_settlement():
+    
+    settlement_id = request.form.get('settlement_id')
+    
+    update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
+
+    increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
+
+    return game()
+
 @bp.route('/build_knight/<int:knight_id>')
 def build_knight(knight_id):
         
@@ -327,24 +349,4 @@ def knight_deactivation(knight_id):
   	
     deactivate_knight.deactivate_knight(knight_id)
   
-    return game()
-
-@bp.route('select_settlement_to_promote')
-def select_settlement_to_promote():
-
-    settler_turn_id = get_settler_turn.get()['settler_turn']
-
-    settlements_with_resource_name = get_settlements.get_settlements_with_resource_name()
-
-    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id and not settlement['is_city']]
-
-    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
-
-@bp.route('/promote_settlement/<int:settlement_id>')
-def promote_settlement(settlement_id):
-    
-    update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
-
-    increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
-
     return game()
