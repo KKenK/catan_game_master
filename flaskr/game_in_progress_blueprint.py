@@ -189,6 +189,8 @@ def barbarians_attack():
 
     victory_for_catan = True if army_strength_of_catan >= barbarian_strength else False
 
+    deactivate_knight.deactivate_all_knights()
+    
     settler_ids_of_settlers_with_cities = set([city['settler_id'] for city in cities])
     print(f"settlers with cities: {settler_ids_of_settlers_with_cities}")
     settler_ids_with_weakest_army_and_cities = []
