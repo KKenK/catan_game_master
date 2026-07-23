@@ -5,34 +5,38 @@
             <h1>Select Settlement To Promote</h1>
         </header>
         <main>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Select</th>
-                        <th>Roll 1</th>
-                        <th>Resource 1</th>
-                        <th>Roll 2</th>
-                        <th>Resource 2</th>
-                        <th>Roll 3</th>
-                        <th>Resource 3</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for settlement in settler_whose_turn_it_is_settlements %}
+            <form action="promote_settlement" method = "post">
+                <table>
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="promote_settlement/{{settlement['id']}}">Select</a> 
-                            </td>
-                            <td>{{settlement['roll_1']}}</td>
-                            <td>{{settlement['resource_1_text']}}</td>
-                            <td>{{settlement['roll_2']}}</td>
-                            <td>{{settlement['resource_2_text']}}</td>
-                            <td>{{settlement['roll_3']}}</td>
-                            <td>{{settlement['resource_3_text']}}</td>
+                            <th>Select</th>
+                            <th>Roll 1</th>
+                            <th>Resource 1</th>
+                            <th>Roll 2</th>
+                            <th>Resource 2</th>
+                            <th>Roll 3</th>
+                            <th>Resource 3</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for settlement in settler_whose_turn_it_is_settlements %}
+                            <tr>
+                                <td>
+                                    <input type="radio" name="settlement_id" value="{{settlement['id']}}" required> 
+                                </td>
+                                <td>{{settlement['roll_1']}}</td>
+                                <td>{{settlement['resource_1_text']}}</td>
+                                <td>{{settlement['roll_2']}}</td>
+                                <td>{{settlement['resource_2_text']}}</td>
+                                <td>{{settlement['roll_3']}}</td>
+                                <td>{{settlement['resource_3_text']}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">Promote!</button>
+            </form>
+  
             <a href="./">Return</a>
         </main>
     {% endblock %}
