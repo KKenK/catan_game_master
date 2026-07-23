@@ -19,6 +19,7 @@ from .helper_modules import (get_game_progress,
                              insert_settlement_into_settlements_table,
                              decrement_victory_points,
                              increment_victory_points,
+                             increment_defender_of_catan,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
                              get_resources,
@@ -219,6 +220,10 @@ def barbarians_attack():
         settlers_with_largest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == largest_army]
 
         is_tie = True if len(settlers_with_largest_army) > 1 else False
+
+        if not is_tie:
+            increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0]['id']) 
+            increment_victory_points.increment_victory_points(settlers_with_largest_army[0]['id'])
 
         return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
 
