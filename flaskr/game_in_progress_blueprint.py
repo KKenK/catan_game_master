@@ -177,27 +177,25 @@ def barbarians_attack():
 
     settler_army_dict = {settler['id'] : sum([knight['level'] for knight in knights if knight['settler_id'] == settler['id'] and knight['is_active']])
                          for settler in settlers}
-    
+    print(f"settler army strength dict: {settler_army_dict}")
     list_of_active_army_strengths = [settler_army_strength for settler_army_strength in settler_army_dict.values()]
-
+    
     army_strength_of_catan = sum(list_of_active_army_strengths)
 
-    settlements =  get_settlements.get_settlements()
+    cities = get_cities.get_cities()
 
-    barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
+    barbarian_strength = len(cities)
 
     victory_for_catan = True if army_strength_of_catan >= barbarian_strength else False
 
-    cities = [settlement for settlement in settlements if settlement['is_city']]
-
     settler_ids_of_settlers_with_cities = set([city['settler_id'] for city in cities])
-
+    print(f"settlers with cities: {settler_ids_of_settlers_with_cities}")
     settler_ids_with_weakest_army_and_cities = []
         
     if not victory_for_catan:
 
-        sorted(list_of_active_army_strengths)
-        
+        list_of_active_army_strengths.sort()
+        print(f"sorted list of active army strengths: {list_of_active_army_strengths}")
         while not settler_ids_with_weakest_army_and_cities:
 
             weakest_army = list_of_active_army_strengths.pop(0)
@@ -232,9 +230,15 @@ def select_city_to_demote():
     settlers_who_contributed_least_to_catans_defence = get_settlers_that_contributed_least_to_catans_defence.get_settlers_that_contributed_least_to_catans_defence()
     
     if request.method == 'POST' and settlers_who_contributed_least_to_catans_defence:
+
         update_is_city_column_of_settlement_to_false.update_is_city_column_of_settlement_to_false(request.form.get('city_id'))
-        remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table(settlers_who_contributed_least_to_catans_defence.pop(0)['id'])
-    
+
+        id_of_settler_demoting_city = settlers_who_contributed_least_to_catans_defence.pop(0)['id']
+
+        remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table(id_of_settler_demoting_city)
+
+        decrement_victory_points.decrement_victory_points(id_of_settler_demoting_city) 
+           
     if not settlers_who_contributed_least_to_catans_defence:
         return render_template('select_city_to_demote.html', defeat_resolved = True)
     
@@ -243,8 +247,6 @@ def select_city_to_demote():
     cities = get_cities.get_cities_with_resource_name()
 
     settler_to_demote_city_id = settlers_who_contributed_least_to_catans_defence[0]['id']
-
-    decrement_victory_points.decrement_victory_points(settler_to_demote_city_id)
 
     cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city_id]
 
