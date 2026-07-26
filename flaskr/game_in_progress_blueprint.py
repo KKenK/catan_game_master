@@ -48,7 +48,7 @@ def game():
 
     knights = get_knights.get_knights()
 
-    current_settler_basic_knight_count = len([knight for knight in knights if knight['settler_id'] == settler_turn_id])
+    current_settler_basic_knight_count = len([knight for knight in knights if knight['settler_id'] == settler_turn_id and knight['level'] == 1])
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
     print(maximum_number_of_basic_knights_reached)
     knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
@@ -328,7 +328,10 @@ def select_knights_to_promote():
     knights = get_knights.get_knights()
 
     current_settlers_turn_knights = [knight for knight in knights if knight['settler_id'] == get_settler_turn.get()['settler_turn']]
-    
+    settler_knihgts__count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight['level'] == knight_type])
+                            for knight_type in [2, 3]}
+
+    print(settler_knihgts__count_dict)
     return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights)
 
 @bp.route('/promote_knight', methods=['POST'])
