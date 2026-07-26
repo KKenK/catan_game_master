@@ -48,6 +48,9 @@ def game():
 
     knights = get_knights.get_knights()
 
+    current_settler_basic_knight_count = len([knight for knight in knights if knight['settler_id'] == settler_turn_id])
+    maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
+    print(maximum_number_of_basic_knights_reached)
     knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
     #print(f"knights_settler_ids: {knights_settler_ids}")
 
@@ -77,7 +80,7 @@ def game():
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
 
-    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarians_distance_from_catan = game_progress['barbarians_distance_from_catan'], settler_dicts = settlers_dict, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
+    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarians_distance_from_catan = game_progress['barbarians_distance_from_catan'], settler_dicts = settlers_dict, maximum_number_of_basic_knights_reached = maximum_number_of_basic_knights_reached, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/start_turn')
 def start_turn():
