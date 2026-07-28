@@ -5,5 +5,5 @@ def knight_rows_to_dict(knight_rows):
                                        'is_active' : knight_row['is_active']
                                        } for knight_row in knight_rows}
 
-    return knight_rows_to_dict
+    return knight_dict
 
