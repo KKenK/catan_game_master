@@ -13,6 +13,7 @@ from .helper_modules import (get_game_progress,
                              calculate_row_id, 
                              update_game_progress,
                              update_settler_turn,
+                             knight_rows_to_dict,
                              insert_knight_into_knight_table,
                              activate_knight,
                              deactivate_knight,
@@ -49,8 +50,9 @@ def game():
     knights = get_knights.get_knights()
 
     current_settler_basic_knight_count = len([knight for knight in knights if knight['settler_id'] == settler_turn_id and knight['level'] == 1])
+
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
-    print(maximum_number_of_basic_knights_reached)
+ 
     knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
     #print(f"knights_settler_ids: {knights_settler_ids}")
 
@@ -326,12 +328,23 @@ def build_knight(knight_id):
 @bp.route('/select_knights_to_promote')
 def select_knights_to_promote():
     knights = get_knights.get_knights()
-
-    current_settlers_turn_knights = [knight for knight in knights if knight['settler_id'] == get_settler_turn.get()['settler_turn']]
-    settler_knihgts__count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight['level'] == knight_type])
+    knight_dict = knight_rows_to_dict.knight_rows_to_dict(knights)
+    current_settlers_turn_knights = [knight for knight in knight_dict.values() if knight['settler_id'] == get_settler_turn.get()['settler_turn']]
+    settler_knights_type_count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight['level'] == knight_type])
                             for knight_type in [2, 3]}
 
-    print(settler_knihgts__count_dict)
+    for knight_type in settler_knights_type_count_dict:
+
+        for knight in current_settlers_turn_knights:
+
+            if knight['level'] != knight_type - 1:
+                continue
+
+            if settler_knights_type_count_dict[knight_type] < 2:
+                knight['is_promotable'] = True
+
+    print(current_settlers_turn_knights)
+
     return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights)
 
 @bp.route('/promote_knight', methods=['POST'])
