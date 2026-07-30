@@ -84,6 +84,19 @@ def game():
 
     return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarians_distance_from_catan = game_progress['barbarians_distance_from_catan'], settler_dicts = settlers_dict, maximum_number_of_basic_knights_reached = maximum_number_of_basic_knights_reached, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
+@bp.route('/first_settler_turn')
+def first_settler_turn():
+
+    game_progress = get_settler_turn.get()
+
+    settler_turn = game_progress['settler_turn']
+
+    settlers = get_settlers.get_settlers()
+
+    update_game_progress.update_game_progress('start_turn')
+
+    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'])
+
 @bp.route('/start_turn')
 def start_turn():
 

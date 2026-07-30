@@ -5,15 +5,29 @@ C:\Users\kylek\Documents\web-projects\catan_game_master\flaskr\templates\index_p
 1 - Add link for new game which clears tables.
 2 - Add link for continue which goes to the current game.
 
+flaskr\index_blueprint.py
+1 - change the continue page redirects with imported function calls for routes functions
+
 flaskr\game_in_progress_blueprint.py
 1 - Create a separate game route for the first turn.
-2 - Implement knights in the settler_dicts
-3 - Implement knights links for activating knights.
-@bp.route('/game', defaults={'knight_id': None})
+2 - Switch route order for collecting resources and resolving barbarian attack.
+3 - Add condition for when no settlements to promote template.
+4 - Create branch for calculating victory points dynamically.
+5 - Add condition for winning game.
+6 - Add progress card victory point mechanism.
+7 - Deserter mechanism.
+8 - Implement longest road.
+9 - City improvement
+10 - Reorder knight display based on level/type in game route and select_knights_to_promote.
+
+@bp.route('/game')
+def game():
+    pass
+
 @bp.route('/game/<int:knight_id>')
 def game(knight_id):
-    if knight_id != None:
-      	pass
+    # ...
+  	game()
 
 Continue link/button using game_progress keywords to determine current game state redirect.
 Clearing all tables except for game progress table.
