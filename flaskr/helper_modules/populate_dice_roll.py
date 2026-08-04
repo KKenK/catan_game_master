@@ -1,6 +1,6 @@
 from .. import db
 
-def insert_into_dice_roll(red, white, event):
+def populate_dice_roll(red, white, event):
 
     database_connection =  db.get_db()
 
