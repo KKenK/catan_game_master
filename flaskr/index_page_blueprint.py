@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
-from .helper_modules import get_game_progress, clear_game_tables, populate_game_progress_table, get_settlers, set_resources_table, resources
+from .helper_modules import get_game_progress, clear_game_tables, populate_game_progress_table, populate_dice_roll, get_settlers, set_resources_table, resources
 bp = Blueprint('index_page',__name__)
 
 @bp.route('/')
@@ -13,6 +13,7 @@ def new_game():
        
     clear_game_tables.clear_game_tables()
     populate_game_progress_table.populate_game_progress_table()
+    populate_dice_roll.populate_dice_roll()
     set_resources_table.set_resources_table(resources.base_resources)
     set_resources_table.set_resources_commodities_table(resources.city_resources_comodities)
     return redirect("/initialise_settlers/register_settler")
