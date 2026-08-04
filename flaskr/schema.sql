@@ -51,6 +51,11 @@ CREATE TABLE city_resources_commodities (
     "name" TEXT NOT NULL
 );
 
+CREATE TABLE dice_roll (
+    red_dice INTEGER NOT NULL,
+    white_dice INTEGER NOT NULL,
+    event_dice TEXT NOT NULL
+)
 -- rows = db.execute('SELECT ...')
 -- row = (id, settler_id, resource_1_name, roll_1, resource_2_name, roll_2, resource_3_name, roll_3, resource_4_name, resource_5_name, resource_6_name, is_city)
 
