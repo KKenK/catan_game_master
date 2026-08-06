@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        <header>
+            <h1>{{victor['username']}} is Victorious!!!</h1>
+        </header>
+        <div>
+            Victory Points: {{victor['victory_points']}}
+        </div>
+        <main>
+            <a href="../">Main Menu</a>
+        </main>
+    {% endblock %}
