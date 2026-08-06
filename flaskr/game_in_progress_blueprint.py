@@ -10,6 +10,7 @@ from .helper_modules import (get_game_progress,
                              get_resources_and_commodities, 
                              get_settlements,
                              get_cities,
+                             get_dice_roll,
                              calculate_row_id, 
                              update_game_progress,
                              update_settler_turn,
@@ -27,6 +28,7 @@ from .helper_modules import (get_game_progress,
                              reset_barbarians_distance_from_catan,
                              insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
                              remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table,
+                             update_dice_roll,
                              update_is_city_column_of_settlement_to_true,
                              update_is_city_column_of_settlement_to_false)
 
@@ -67,7 +69,7 @@ def game():
     settler_table_keys = list(settlers[0].keys())
     settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
     #print (f"settler_dict: {settlers_dict}")
-
+    
     for settler in settlers:
 
         settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
@@ -128,20 +130,33 @@ def start_turn():
 
     return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
 
-@bp.route('/collect_resources', methods=['POST'])
+@bp.route('/collect_resources', methods=['GET', 'POST'])
 def collect_resources():
-    
-    event_rolled = request.form['event_dice_roll']
-    
-    if event_rolled == 'barbarian_ship':
+
+    dice_roll = {}
+
+    if request.method == 'GET':
         
-        decrement_the_barbarians_distance_from_catan.decrement_the_barbarians_distance_from_catan()
+        dice_roll = get_dice_roll.get_dice_roll()
+
+    if request.method == 'POST':
+
+        dice_roll = {'red' : request.form['red'], 'white' : request.form['white'], 'event' : request.form['event']}
+
+        update_dice_roll.update_dice_roll(red = dice_roll['red'], white = dice_roll['white'], event = dice_roll['event'])
+
+        if dice_roll['event'] == 'barbarian_ship':
+            
+            decrement_the_barbarians_distance_from_catan.decrement_the_barbarians_distance_from_catan()
 
     barbarians_distance_from_catan = get_game_progress_data.get_game_progress_data()['barbarians_distance_from_catan']
 
     barbarians_attack = True if not barbarians_distance_from_catan else False
 
-    number_rolled = int(request.form['dice_roll'])
+    if barbarians_attack:
+        return render_template('collect_resources.html', barbarians_attack = barbarians_attack)
+
+    number_rolled = int(dice_roll['red']) + int(dice_roll['white'])
     
     settlers = get_settlers.get_settlers()
     

@@ -9,16 +9,15 @@ flaskr\index_blueprint.py
 1 - change the continue page redirects with imported function calls for routes functions
 
 flaskr\game_in_progress_blueprint.py
-1 - Create a separate game route for the first turn.
-2 - Switch route order for collecting resources and resolving barbarian attack.
-3 - Add condition for when no settlements to promote template.
-4 - Create branch for calculating victory points dynamically.
-5 - Add condition for winning game.
-6 - Add progress card victory point mechanism.
-7 - Deserter mechanism.
-8 - Implement longest road.
-9 - City improvement
-10 - Reorder knight display based on level/type in game route and select_knights_to_promote.
+1 - Add condition for when no settlements to promote template.
+2 - Create branch for calculating victory points dynamically.
+3 - Add condition for winning game.
+4 - Add progress card victory point mechanism.
+5 - Deserter mechanism.
+6 - Implement longest road.
+7 - City improvement
+8 - Reorder knight display based on level/type in game route and select_knights_to_promote.
+9 - Rename clear_game_tables to delete_game_tables.
 
 @bp.route('/game')
 def game():
