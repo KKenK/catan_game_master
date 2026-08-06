@@ -43,6 +43,11 @@ def game():
             update_game_progress.update_game_progress("game_in_progress")
 
     settlers = get_settlers.get_settlers()
+
+    victor = [settler for settler in settlers if settler['victory_points'] >= 13]
+
+    if victor:
+        return render_template('victory_achieved.html', victor = victor[0])
     
     settler_turn_id = game_progress['settler_turn']
     settlers_turn_username =  settlers[settler_turn_id]['username']
