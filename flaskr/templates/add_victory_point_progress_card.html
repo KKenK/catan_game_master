@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        <header>
+            <h1>Select Settler</h1>
+        </header>
+        <main>
+            <form action="add_victory_point" method = "post">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Settler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for settler in settlers %}
+                            <tr>
+                                <td>
+                                    <input type="radio" name="id" value="{{settler['id']}}" required> 
+                                </td>
+                                <td>{{settler['username']}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">Add Victory Point!</button>
+            </form>
+            
+            <a href="./">Return</a>
+        
+        </main>
+    {% endblock %}
