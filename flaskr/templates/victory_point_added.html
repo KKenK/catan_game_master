@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        <header>
+            <h1>Victory Point Added!</h1>
+        </header>
+        
+        <main>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Settler Name</th>
+                        <th>Victory Points</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>{{settler_dicts[settler_id]['username']}}</td>
+                            <td>{{settler_dicts[settler_id]['victory_points']}}</td>
+                        </tr>
+                </tbody>
+            </table>
+            <div>
+                <a href="./">Proceed</a>
+            </div>
+        </main>
+    {% endblock %}
