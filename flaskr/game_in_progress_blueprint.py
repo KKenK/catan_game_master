@@ -69,7 +69,7 @@ def game():
     settler_table_keys = list(settlers[0].keys())
     settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
     #print (f"settler_dict: {settlers_dict}")
-    
+
     for settler in settlers:
 
         settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
@@ -197,6 +197,24 @@ def collect_resources():
     print(settlers_to_collect_dict)     
 
     return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict, barbarians_attack = barbarians_attack)
+
+@bp.route('/add_victory_point_progress_card')
+def add_victory_point_progress_card():
+
+    settlers = get_settlers.get_settlers()
+
+    return render_template('add_victory_point_progress_card.html', settlers = settlers)
+
+@bp.route('/add_victory_point', methods=['POST'])
+def add_victory_point():
+
+    id_of_settler_to_increment =  int(request.form['id'])
+
+    increment_victory_points.increment_victory_points(id_of_settler_to_increment)
+
+    settlers = get_settlers.get_settlers()
+    
+    return render_template('victory_point_added.html', incremented_settler = settlers[id_of_settler_to_increment])
 
 @bp.route('/barbarians_attack')
 def barbarians_attack():
