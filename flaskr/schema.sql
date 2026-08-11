@@ -5,7 +5,7 @@ CREATE TABLE game_progress (
     barbarians_distance_from_catan INTEGER DEFAULT 7 NOT NULL
 );
 
-ALTER TABLE settlers (
+CREATE TABLE settlers (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     victory_point_card INTEGER DEFAULT 0 NOT NULL,
