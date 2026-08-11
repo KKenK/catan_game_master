@@ -21,6 +21,7 @@ from .helper_modules import (get_game_progress,
                              insert_settlement_into_settlements_table,
                              decrement_victory_points,
                              increment_victory_points,
+                             increment_victory_point_card_count,
                              increment_defender_of_catan,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
@@ -211,12 +212,12 @@ def add_victory_point_progress_card():
 
     return render_template('add_victory_point_progress_card.html', settlers = settlers)
 
-@bp.route('/add_victory_point', methods=['POST'])
-def add_victory_point():
+@bp.route('/increment_victory_point_card_count', methods=['POST'])
+def increment_victory_point_card():
 
     id_of_settler_to_increment =  int(request.form['id'])
 
-    increment_victory_points.increment_victory_points(id_of_settler_to_increment)
+    increment_victory_point_card_count.increment_victory_point_card_count(id_of_settler_to_increment)
 
     settlers = get_settlers.get_settlers()
     
