@@ -28,6 +28,7 @@ from .helper_modules import (get_game_progress,
                              reset_barbarians_distance_from_catan,
                              insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
                              remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table,
+                             update_current_settlers_longest_road,
                              update_dice_roll,
                              update_is_city_column_of_settlement_to_true,
                              update_is_city_column_of_settlement_to_false)
@@ -345,7 +346,7 @@ def place_settlement():
 
     return game()
 
-@bp.route('select_settlement_to_promote')
+@bp.route('/select_settlement_to_promote')
 def select_settlement_to_promote():
 
     settler_turn_id = get_settler_turn.get()['settler_turn']
@@ -364,6 +365,26 @@ def promote_settlement():
     update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
 
     increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
+
+    return game()
+
+@bp.route('/revise_longest_road')
+def revise_longest_road():
+
+        settler_turn_id = get_settler_turn.get()['settler_turn']
+
+        current_settler = [settler for settler in get_settlers.get_settlers() if settler['id'] == settler_turn_id][0]
+
+        return render_template('revise_longest_road.html', current_settler = current_settler, current_settler_longest_road = current_settler['longest_road'])
+
+@bp.route('update_longest_road', methods = ['POST'])
+def update_longest_road():
+
+    current_settler_longest_road = request.form['current_settler_longest_road']
+
+    settler_turn_id = get_settler_turn.get()['settler_turn']
+
+    update_current_settlers_longest_road.update_current_settlers_longest_road(current_settler_longest_road, settler_turn_id)
 
     return game()
 
