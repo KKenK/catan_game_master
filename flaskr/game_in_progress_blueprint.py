@@ -19,8 +19,6 @@ from .helper_modules import (get_game_progress,
                              activate_knight,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
-                             decrement_victory_points,
-                             increment_victory_points,
                              increment_victory_point_card_count,
                              increment_defender_of_catan,
                              increment_knights_level,
@@ -283,7 +281,6 @@ def barbarians_attack():
 
         if not is_tie:
             increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0]['id']) 
-            increment_victory_points.increment_victory_points(settlers_with_largest_army[0]['id'])
 
         return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
 
@@ -301,9 +298,7 @@ def select_city_to_demote():
         id_of_settler_demoting_city = settlers_who_contributed_least_to_catans_defence.pop(0)['id']
 
         remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table(id_of_settler_demoting_city)
-
-        decrement_victory_points.decrement_victory_points(id_of_settler_demoting_city) 
-           
+         
     if not settlers_who_contributed_least_to_catans_defence:
         return render_template('select_city_to_demote.html', defeat_resolved = True)
     
@@ -342,8 +337,6 @@ def place_settlement():
             'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
             'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
             'is_city': False})
-        
-    increment_victory_points.increment_victory_points(settler_turn_id)
 
     return game()
 
@@ -364,8 +357,6 @@ def promote_settlement():
     settlement_id = request.form.get('settlement_id')
     
     update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
-
-    increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
 
     return game()
 
