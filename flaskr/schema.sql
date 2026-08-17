@@ -11,7 +11,7 @@ CREATE TABLE settlers (
     victory_points INTEGER DEFAULT 0 NOT NULL,
     victory_point_card INTEGER DEFAULT 0 NOT NULL,
     longest_road INTEGER DEFAULT 1 NOT NULL,
-    is_longest_road INTEGER DEFAULT 0 NOT NULL,
+    has_longest_road INTEGER DEFAULT 0 NOT NULL,
     defender_of_catan INTEGER DEFAULT 0 NOT NULL,
     army_strength INTEGER DEFAULT 0 NOT NULL 
 );
