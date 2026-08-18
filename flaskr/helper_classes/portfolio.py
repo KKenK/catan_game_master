@@ -7,8 +7,8 @@ class Portfolio():
 
     def _calculate_portfolio_value(self):
 
-        settlement_value = len([settlement for settlement in self.settlements if not settlement['is_city']])
+        settlement_value = len([settlement for settlement in self.settlements if not settlement.is_city])
 
-        city_value = len([settlement for settlement in self.settlements if settlement['is_city']]) * 2 
+        city_value = len([settlement for settlement in self.settlements if settlement.is_city]) * 2 
 
         return settlement_value + city_value
