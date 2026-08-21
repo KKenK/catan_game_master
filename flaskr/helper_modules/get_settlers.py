@@ -4,7 +4,7 @@ def get_settlers():
     
     database_connection = db.get_db()
     
-    return database_connection.execute("""SELECT * FROM settlers""").fetchall()
+    return database_connection.execute("""SELECT * FROM settlers ORDER BY id""").fetchall()
     
 def get_first_settler_without_settlement():
     
