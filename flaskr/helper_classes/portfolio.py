@@ -12,3 +12,9 @@ class Portfolio():
         city_value = len([settlement for settlement in self.settlements if settlement.is_city]) * 2 
 
         return settlement_value + city_value
+
+    def print(self):
+        print(f"""settler id: {self.settler_id} 
+        number of settlements: {len(self.settlements)}
+        value: {self.value}
+        """)
