@@ -81,7 +81,7 @@ def game():
 
     active_knights_count = sum([army.strength for army in armies])
 
-    barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
+    barbarian_strength = len([settlement for settlement in settlements if settlement.is_city])
 
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
