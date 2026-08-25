@@ -77,27 +77,9 @@ def game():
 
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
  
-    knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
-    #print(f"knights_settler_ids: {knights_settler_ids}")
-
-    list_of_active_knights_by_settler_id = [[knight['level'] for knight in knights if knight['settler_id'] == knight_settler_id and knight['is_active']] for knight_settler_id in knights_settler_ids]
-    #print(f"list_of_active_knights_by_settler_id: {list_of_active_knights_by_settler_id}")
-    
     id_of_next_knight_to_be_built = len(knights)
 
-    knight_strength_dict = {knights_settler_ids[i] : sum(list_of_active_knights_by_settler_id[i]) for i in range(len(knights_settler_ids))}
-    #print(f"knight_strength_dict: {knight_strength_dict}")
-
-    settler_table_keys = list(settlers[0].keys())
-    settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
-    #print (f"settler_dict: {settlers_dict}")
-
-    for settler in settlers:
-
-        settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
-        settlers_dict[settler['id']]['knights'] = [knight for knight in knights if knight['settler_id'] == settler['id']]
-
-    active_knights_count = sum(knight_strength_dict.values())
+    active_knights_count = sum([army.strength for army in armies])
 
     barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
 
