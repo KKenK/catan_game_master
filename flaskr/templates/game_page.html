@@ -21,21 +21,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for settler_id in settler_ids %}
+                    {% for settler in settlers %}
                         <tr>
-                            <td>{{settler_dicts[settler_id]['username']}}</td>
-                            <td>{{settler_dicts[settler_id]['victory_points']}}</td>
-                            <td>{{settler_dicts[settler_id]['longest_road']}}</td>
-                            <td>{{settler_dicts[settler_id]['defender_of_catan']}}</td>
-                            <td>{{settler_dicts[settler_id]['army_strength']}}</td>
+                            <td>{{settler.username}}</td>
+                            <td>{{victory_points[settler.id]}}</td>
+                            <td>{{settler.longest_road}}</td>
+                            <td>{{settler.defender_of_catan}}</td>
+                            <td>{{armies[settler.id].strength}}</td>
                           	<td>
-                                {% for knight in settler_dicts[settler_id]['knights'] %}
-                                    {% if knight['is_active'] %}
+                                {% for knight in armies[settler.id].knights %}
+                                    {% if knight.is_active %}
                                         <input checked disabled type="checkbox">
-                                        <a href="{{link_prefix}}deactivate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
+                                        <a href="{{link_prefix}}deactivate_knight/{{knight['id']}}">lvl {{knight.level}} knight</a>
                                     {% else %}
                                         <input disabled type="checkbox">
-                                      	<a href="{{link_prefix}}activate_knight/{{knight['id']}}">lvl {{knight['level']}} knight</a>
+                                      	<a href="{{link_prefix}}activate_knight/{{knight['id']}}">lvl {{knight.level}} knight</a>
                                     {% endif %}
                                 {% endfor %}
                             </td>
