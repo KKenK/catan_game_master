@@ -1,6 +1,13 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
+from .helper_classes.army import Army
+from .helper_classes.knight import Knight
+from .helper_classes.portfolio import Portfolio
+from .helper_classes.settlement import Settlement
+from .helper_classes.settler import Settler
+
+
 from .helper_modules import (get_game_progress,
                              get_game_progress_data,
                              get_settler_turn, 
@@ -42,22 +49,31 @@ def game():
 
     if game_progress['progress'] != "game_in_progress":
             update_game_progress.update_game_progress("game_in_progress")
+    
+    settlers = [Settler(settler_row) for settler_row in get_settlers.get_settlers()]
 
-    settlers = get_settlers.get_settlers()
+    settlements = [Settlement(settlement) for settlement in get_settlements.get_settlements()]
 
-    victor = [settler for settler in settlers if settler['victory_points'] >= 13]
+    settler_portfolios = {settler_index : Portfolio([settlement for settlement in settlements if settlement.settler_id == settler_index], settler_index) for settler_index in range(len(settlers))}
+
+    victory_points = {settler.id : settler.calculate_victory_points(settler_portfolios[settler.id].value) for settler in settlers}
+
+    victor = [settler[0] for victory_point in victory_points.items() if victory_point[1] >= 13]
 
     if victor:
         return render_template('victory_achieved.html', victor = victor[0])
+
+    knights = [Knight(knight) for knight in get_knights.get_knights()]
+
+    armies = [Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers]
+    [army.print_army_dict() for army in armies]
     
     settler_turn_id = game_progress['settler_turn']
-    settlers_turn_username =  settlers[settler_turn_id]['username']
+    settlers_turn_username =  settlers[settler_turn_id].username
 
-    settler_ids = sorted([settler['id'] for settler in settlers])
+    settler_ids = sorted([settler.id for settler in settlers])
 
-    knights = get_knights.get_knights()
-
-    current_settler_basic_knight_count = len([knight for knight in knights if knight['settler_id'] == settler_turn_id and knight['level'] == 1])
+    current_settler_basic_knight_count = len([knight for knight in knights if armies[settler_turn_id] == settler_turn_id and knight['level'] == 1])
 
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
  
@@ -80,8 +96,6 @@ def game():
 
         settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
         settlers_dict[settler['id']]['knights'] = [knight for knight in knights if knight['settler_id'] == settler['id']]
-
-    settlements = get_settlements.get_settlements()
 
     active_knights_count = sum(knight_strength_dict.values())
 
