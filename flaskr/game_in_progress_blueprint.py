@@ -58,7 +58,7 @@ def game():
 
     victory_points = {settler.id : settler.calculate_victory_points(settler_portfolios[settler.id].value) for settler in settlers}
 
-    victor = [settler[0] for victory_point in victory_points.items() if victory_point[1] >= 13]
+    victor = [victory_point[0] for victory_point in victory_points.items() if victory_point[1] >= 13]
 
     if victor:
         return render_template('victory_achieved.html', victor = victor[0])
@@ -73,7 +73,7 @@ def game():
 
     settler_ids = sorted([settler.id for settler in settlers])
 
-    current_settler_basic_knight_count = len([knight for knight in armies[settler_turn_id].knights if knight['level'] == 1])
+    current_settler_basic_knight_count = len([knight for knight in armies[settler_turn_id].knights if knight.level == 1])
 
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
  
