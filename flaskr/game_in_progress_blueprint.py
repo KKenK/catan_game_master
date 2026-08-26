@@ -65,7 +65,7 @@ def game():
 
     knights = [Knight(knight) for knight in get_knights.get_knights()]
 
-    armies = [Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers]
+    armies = {settler.id : Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers}
     
     settler_turn_id = game_progress['settler_turn']
     settlers_turn_username =  settlers[settler_turn_id].username
@@ -76,7 +76,7 @@ def game():
  
     id_of_next_knight_to_be_built = len(knights)
 
-    active_knights_count = sum([army.strength for army in armies])
+    active_knights_count = sum([army.strength for army in armies.values()])
 
     barbarian_strength = len([settlement for settlement in settlements if settlement.is_city])
 
