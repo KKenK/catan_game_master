@@ -33,6 +33,7 @@ from .helper_modules import (get_game_progress,
                              decrement_the_barbarians_distance_from_catan,
                              get_resources,
                              reset_barbarians_distance_from_catan,
+                             row_objects_to_classes,
                              insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
                              remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table,
                              update_current_settlers_longest_road,
@@ -50,9 +51,9 @@ def game():
     if game_progress['progress'] != "game_in_progress":
             update_game_progress.update_game_progress("game_in_progress")
     
-    settlers = [Settler(settler_row) for settler_row in get_settlers.get_settlers()]
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    settlements = [Settlement(settlement) for settlement in get_settlements.get_settlements()]
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
     settler_portfolios = {settler_index : Portfolio([settlement for settlement in settlements if settlement.settler_id == settler_index], settler_index) for settler_index in range(len(settlers))}
 
@@ -63,7 +64,7 @@ def game():
     if victor:
         return render_template('victory_achieved.html', victor = victor[0])
 
-    knights = [Knight(knight) for knight in get_knights.get_knights()]
+    knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
 
     armies = {settler.id : Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers}
     
@@ -92,11 +93,11 @@ def first_settler_turn():
 
     settler_turn = game_progress['settler_turn']
 
-    settlers = get_settlers.get_settlers()
+    current_settler = Settler(get_settlers.get_settlers()[settler_turn])
 
     update_game_progress.update_game_progress('start_turn')
 
-    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'])
+    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = current_settler.username)
 
 @bp.route('/start_turn')
 def start_turn():
