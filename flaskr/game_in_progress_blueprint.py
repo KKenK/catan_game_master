@@ -108,27 +108,29 @@ def start_turn():
 
     is_settler_two = game_progress['is_settler_two']
 
-    settlers = get_settlers.get_settlers()
+    settler_row_objects = get_settlers.get_settlers()
 
-    if get_game_progress.get_game_progress() == 'start_turn':
+    current_settler = Settler(get_settlers.get_settlers()[settler_turn])
+
+    if not get_game_progress.get_game_progress() == 'start_turn':      
+    
+        update_game_progress.update_game_progress('start_turn')
         
-        return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
-    
-    update_game_progress.update_game_progress('start_turn')
-    
-    number_of_settlers = len(settlers)
+        number_of_settlers = len(settler_row_objects)
 
-    if number_of_settlers > 4:
-        is_settler_two = 1 if not is_settler_two else 0
+        if number_of_settlers > 4:
+            is_settler_two = 1 if not is_settler_two else 0
 
-    settler_turn += 3 if is_settler_two else 1
+        settler_turn += 3 if is_settler_two else 1
 
-    if settler_turn >= number_of_settlers:
-        settler_turn -= number_of_settlers
+        if settler_turn >= number_of_settlers:
+            settler_turn -= number_of_settlers
 
-    update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
+        current_settler = Settler(get_settlers.get_settlers()[settler_turn])
 
-    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
+        update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
+
+    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = current_settler.username, is_settler_two = is_settler_two)
 
 @bp.route('/collect_resources', methods=['GET', 'POST'])
 def collect_resources():
