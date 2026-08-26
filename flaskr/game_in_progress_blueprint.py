@@ -71,8 +71,6 @@ def game():
     settler_turn_id = game_progress['settler_turn']
     settlers_turn_username =  settlers[settler_turn_id].username
 
-    settler_ids = sorted([settler.id for settler in settlers])
-
     current_settler_basic_knight_count = len([knight for knight in armies[settler_turn_id].knights if knight.level == 1])
 
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
