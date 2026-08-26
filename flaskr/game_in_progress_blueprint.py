@@ -66,7 +66,6 @@ def game():
     knights = [Knight(knight) for knight in get_knights.get_knights()]
 
     armies = [Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers]
-    [army.print_army_dict() for army in armies]
     
     settler_turn_id = game_progress['settler_turn']
     settlers_turn_username =  settlers[settler_turn_id].username
