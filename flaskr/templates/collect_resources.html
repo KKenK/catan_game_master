@@ -16,11 +16,11 @@
                     <th>Collect</th>
                 </thead>
                 <tbody>
-                    {% for settler in settlers_to_collect_dict %}
+                    {% for settler_id in settlers_to_collect_sum_dict.keys() %}
                     <tr>
-                        <td>{{settlers[settler]['username']}}</td>
+                        <td>{{settlers[settler_id].username}}</td>
                         <td>
-                            {% for item in settlers_to_collect_dict[settler].items() %}
+                            {% for item in settlers_to_collect_sum_dict[settler_id].items() %}
                                 {{item[0]}} x {{item[1]}}
                             {% endfor%}
                         </td>
