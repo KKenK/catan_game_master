@@ -160,45 +160,35 @@ def collect_resources():
 
     number_rolled = int(dice_roll['red']) + int(dice_roll['white'])
     
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
     
-    settlements = get_settlements.get_settlements()
-
-    settlements_dict = {settlement['id']: {'settler_id': settlement['settler_id'],
-                                           'rolls': [(settlement['roll_1'], settlement['resource_1']),
-                                           (settlement['roll_2'], settlement['resource_2']),
-                                           (settlement['roll_3'], settlement['resource_3'])],
-                                           'is_city': settlement['is_city']}
-                                           for settlement in settlements}
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
     resources_and_commodities = get_resources_and_commodities.get_resources_and_commodities()
     resources_and_commodities_dict = {item['id']: {'settlement': item[1], 'city': item[2]} for item in resources_and_commodities}
 
-    settlers_to_collect_dict = {settler['id'] : [] for settler in settlers}
-  
-    for settler in settlers:
-        
-        items_to_collect_list = []
-        
-        for settlement in settlements_dict.values(): 
-            
-            if settler['id'] != settlement['settler_id']:
+    settlers_to_collect_dict = {settler.id : [] for settler in settlers}
+
+    for settlement in settlements:
+
+        items_to_collect_list = [] 
+
+        for resource_hex in settlement.resource_hexes:
+            if not resource_hex.roll == number_rolled:
                 continue
-                
-            for roll in settlement['rolls']:
-                if roll[0] != number_rolled:
-                      continue
+           
+            items_to_collect_list.append(resources_and_commodities_dict[resource_hex.resource]['settlement'])
 
-                items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['settlement'])
-                
-                if settlement['is_city']:
-                    items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['city'])    
+            if not settlement.is_city:
+                continue
+
+            items_to_collect_list.append(resources_and_commodities_dict[resource_hex.resource]['city'])
         
-        settlers_to_collect_dict[settler['id']] = {item : items_to_collect_list.count(item) for item in set(items_to_collect_list)}
-    
-    print(settlers_to_collect_dict)     
+        settlers_to_collect_dict[settlement.settler_id].extend(items_to_collect_list)
 
-    return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict, barbarians_attack = barbarians_attack)
+    settlers_to_collect_sum_dict = {settler.id : {item : settlers_to_collect_dict[settler.id].count(item) for item in set(settlers_to_collect_dict[settler.id])} for settler in settlers if settlers_to_collect_dict[settler.id]}    
+
+    return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_sum_dict = settlers_to_collect_sum_dict, barbarians_attack = barbarians_attack)
 
 @bp.route('/add_victory_point_progress_card')
 def add_victory_point_progress_card():
