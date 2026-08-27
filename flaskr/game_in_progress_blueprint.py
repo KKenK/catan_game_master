@@ -27,7 +27,7 @@ from .helper_modules import (get_game_progress,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
                              decrement_victory_points,
-                             increment_victory_points,
+                             increment_victory_points_cards,
                              increment_defender_of_catan,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
@@ -198,11 +198,11 @@ def add_victory_point_progress_card():
     return render_template('add_victory_point_progress_card.html', settlers = settlers)
 
 @bp.route('/add_victory_point', methods=['POST'])
-def add_victory_point():
+def increment_victory_point_card():
 
     id_of_settler_to_increment =  int(request.form['id'])
 
-    increment_victory_points.increment_victory_points(id_of_settler_to_increment)
+    increment_victory_point_cards.increment_victory_point_cards(id_of_settler_to_increment)
 
     settlers = get_settlers.get_settlers()
     
@@ -268,7 +268,7 @@ def barbarians_attack():
 
         if not is_tie:
             increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0]['id']) 
-            increment_victory_points.increment_victory_points(settlers_with_largest_army[0]['id'])
+            increment_victory_point.increment_victory_points(settlers_with_largest_army[0]['id'])
 
         return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
 
