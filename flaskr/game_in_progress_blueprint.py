@@ -193,7 +193,7 @@ def collect_resources():
 @bp.route('/add_victory_point_progress_card')
 def add_victory_point_progress_card():
 
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes(Settler, get_settlers.get_settlers())
 
     return render_template('add_victory_point_progress_card.html', settlers = settlers)
 
