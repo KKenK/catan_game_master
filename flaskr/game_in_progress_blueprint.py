@@ -204,9 +204,9 @@ def increment_victory_point_card():
 
     increment_victory_point_cards.increment_victory_point_cards(id_of_settler_to_increment)
 
-    settlers = get_settlers.get_settlers()
+    incremented_settler = Settler(get_settlers.get_settlers()[id_of_settler_to_increment])
     
-    return render_template('victory_point_added.html', incremented_settler = settlers[id_of_settler_to_increment])
+    return render_template('victory_point_card_added.html', settler = incremented_settler)
 
 @bp.route('/barbarians_attack')
 def barbarians_attack():
