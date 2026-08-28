@@ -6,7 +6,6 @@ from .helper_modules import (get_settlers,
                             get_resources,
                             update_game_progress, 
                             insert_settlement_into_settlements_table,
-                            increment_victory_points,
                             calculate_row_id)
 
 bp = Blueprint('initialise_board', __name__, url_prefix='/initialise_board/')
@@ -30,9 +29,7 @@ def place_settlement():
                 'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
                 'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
                 'is_city': False})
-        
-        increment_victory_points.increment_victory_points(current_settler['id'])
-    
+           
     resources = get_resources.get_resources()  
     
     if settlers_with_no_victory_points:
@@ -63,9 +60,7 @@ def place_city():
                 'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
                 'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
                 'is_city': True})
-        
-        increment_victory_points.increment_victory_points(current_settler['id'], increment_value = 2)
-    
+            
     if not settlers_with_one_victory_points:
         have_all_settlers_placed_a_city = True
         current_settler = {'username' : 'All settlements places!',}
