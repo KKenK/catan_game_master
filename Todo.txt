@@ -1,6 +1,9 @@
 C:\Users\kylek\Documents\web-projects\catan_game_master\flaskr\templates\initialise_players.html
 1 - Style to look like disabled button/
 
+flaskr\schema.sql
+1 - rename is_longest_road to has_longest_road
+
 C:\Users\kylek\Documents\web-projects\catan_game_master\flaskr\templates\index_page.html
 1 - Add link for new game which clears tables.
 2 - Add link for continue which goes to the current game.
@@ -18,6 +21,14 @@ flaskr\game_in_progress_blueprint.py
 7 - City improvement
 8 - Reorder knight display based on level/type in game route and select_knights_to_promote.
 9 - Rename clear_game_tables to delete_game_tables.
+10 - Add calculate longest road logic to update_road route
+11 - Add metropolis to calculate_victory_points
+12 - Add merchant to calculate_victory_points
+flask\templates\place_settlement.html
+1 - Reverse order of resource and roll and disable roll input when None is selected.
+
+flask\templates\start_turn.html
+Change the dice limits to the start turn template
 
 @bp.route('/game')
 def game():
