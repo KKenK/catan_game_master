@@ -2,7 +2,7 @@ class Settler():
     def __init__(self, settler_row):
         self.id = settler_row['id']
         self.username = settler_row['username']
-        self.victory_point_card = settler_row['victory_point_card'] 
+        self.victory_point_cards = settler_row['victory_point_cards'] 
         self.longest_road  = settler_row['longest_road']
         self.has_longest_road  = settler_row['has_longest_road']
         self.defender_of_catan = settler_row['defender_of_catan']
@@ -11,7 +11,7 @@ class Settler():
 
         longest_road_victory_points = 2 if self.has_longest_road else 0
   
-        return self.victory_point_card + self.defender_of_catan + longest_road_victory_points + settler_portfolio_worth
+        return self.victory_point_cards + self.defender_of_catan + longest_road_victory_points + settler_portfolio_worth
 
     def print_settler_dict(self):
         print(self.__dict__)
