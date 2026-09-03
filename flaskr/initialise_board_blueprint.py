@@ -2,11 +2,16 @@ from flask import (
     Blueprint, g, redirect, render_template, request, url_for
 )
 
-from .helper_modules import (get_settlers, 
+from .helper_classes.settlement import Settlement
+from .helper_classes.settler import Settler
+
+from .helper_modules import (calculate_row_id,
+                            get_settlers, 
+                            get_settlements,
                             get_resources,
-                            update_game_progress, 
                             insert_settlement_into_settlements_table,
-                            calculate_row_id)
+                            row_objects_to_classes,
+                            update_game_progress)
 
 bp = Blueprint('initialise_board', __name__, url_prefix='/initialise_board/')
 
@@ -15,9 +20,11 @@ def place_settlement():
     
     update_game_progress.update_game_progress("initial settlement placement")
 
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    settlers_with_no_victory_points = [settler for settler in settlers if settler['victory_points'] == 0]   
+    settlement_settler_ids = [settlement.settler_id for settlement in row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())]
+
+    settlers_with_no_victory_points = [settler for settler in settlers if settler.id not in settlement_settler_ids]   
 
     if request.method == 'POST':
 
@@ -33,7 +40,7 @@ def place_settlement():
     resources = get_resources.get_resources()  
     
     if settlers_with_no_victory_points:
-        return render_template('place_settlement.html', settler_to_place_settlement_name = settlers_with_no_victory_points[0]['username'],
+        return render_template('place_settlement.html', settler_to_place_settlement_name = settlers_with_no_victory_points[0].username,
                         have_all_settlers_placed_a_settlement = False,
                         resources = resources)      
     else:
