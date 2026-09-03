@@ -6,6 +6,7 @@ from .helper_classes.settlement import Settlement
 from .helper_classes.settler import Settler
 
 from .helper_modules import (calculate_row_id,
+                            get_cities,
                             get_settlers, 
                             get_settlements,
                             get_resources,
@@ -31,7 +32,7 @@ def place_settlement():
         current_settler = settlers_with_no_settlements.pop(0)
         settlement_id = calculate_row_id.calculate_row_id("settlements")
         insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
-                'settler_id': current_settler['id'],
+                'settler_id': current_settler.id,
                 'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
                 'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
                 'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
@@ -57,32 +58,33 @@ def place_city():
 
     settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    settlement_settler_ids = [settlement.settler_id for settlement in row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())]
+    city_settler_ids = [settlement.settler_id for settlement in row_objects_to_classes.row_objects_to_classes(Settlement, get_cities.get_cities())]
 
-    settlers_wit_victory_points = [settler for settler in settlers if settler.id not in settlement_settler_ids]   
-
-    settlers_with_one_victory_points = [settler for settler in settlers if settler['victory_points'] == 1]   
+    settlers_with_no_cities = [settler for settler in settlers if settler.id not in city_settler_ids]   
 
     if request.method == 'POST':
 
-        current_settler = settlers_with_one_victory_points.pop()
+        current_settler = settlers_with_no_cities.pop()
         settlement_id = calculate_row_id.calculate_row_id("settlements")
         insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
-                'settler_id': current_settler['id'],
+                'settler_id': current_settler.id,
                 'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
                 'resource_2': request.form['resource_2'], 'roll_2': request.form['roll_2'],
                 'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
                 'is_city': True})
-            
-    if not settlers_with_one_victory_points:
-        have_all_settlers_placed_a_city = True
-        current_settler = {'username' : 'All settlements places!',}
-    else:
-        current_settler = settlers_with_one_victory_points[-1]
-        have_all_settlers_placed_a_city = False
-    
+
     resources = get_resources.get_resources()
+                
+    if settlers_with_no_cities:
+        return render_template('initialise_board/place_city.html', settler_to_place_city_name = settlers_with_no_cities[-1].username,
+                                have_all_settlers_placed_a_city = False,
+                                resources = resources)
+    else:
+
+        return render_template('initialise_board/place_city.html',
+                                have_all_settlers_placed_a_city = True,
+                                resources = resources)
     
-    return render_template('initialise_board/place_city.html', settler_to_place_city_name = current_settler['username'],
-                            have_all_settlers_placed_a_city = have_all_settlers_placed_a_city,
-                            resources = resources)
+
+
+    
