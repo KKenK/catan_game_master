@@ -38,7 +38,7 @@ CREATE TABLE knights (
 );
 
 CREATE TABLE settlers_that_contributed_least_to_catans_defence (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY
 );
 
 CREATE TABLE resources (
