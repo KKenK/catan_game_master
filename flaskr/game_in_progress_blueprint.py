@@ -212,20 +212,20 @@ def barbarians_attack():
 
     reset_barbarians_distance_from_catan.reset_barbarians_distance_from_catan()
     
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    knights = get_knights.get_knights()
+    knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
 
-    settlements = get_settlements.get_settlements()
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
-    settler_army_dict = {settler['id'] : sum([knight['level'] for knight in knights if knight['settler_id'] == settler['id'] and knight['is_active']])
-                         for settler in settlers}
-    print(f"settler army strength dict: {settler_army_dict}")
-    list_of_active_army_strengths = [settler_army_strength for settler_army_strength in settler_army_dict.values()]
+    armies_dict = {settler.id : Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers}
+
+    print(f"settler army strength dict: {armies_dict}")
+    list_of_active_army_strengths = [settler_army.strength for settler_army in armies_dict.values()]
     
     army_strength_of_catan = sum(list_of_active_army_strengths)
 
-    cities = get_cities.get_cities()
+    cities = [settlement for settlement in settlements if settlement.is_city]
 
     barbarian_strength = len(cities)
 
@@ -233,7 +233,7 @@ def barbarians_attack():
 
     deactivate_knight.deactivate_all_knights()
 
-    settler_ids_of_settlers_with_cities = set([city['settler_id'] for city in cities])
+    settler_ids_of_settlers_with_cities = set([city.settler_id for city in cities])
     print(f"settlers with cities: {settler_ids_of_settlers_with_cities}")
     settler_ids_with_weakest_army_and_cities = []
         

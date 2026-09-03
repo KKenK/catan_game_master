@@ -80,7 +80,6 @@ def place_city():
                                 have_all_settlers_placed_a_city = False,
                                 resources = resources)
     else:
-
         return render_template('initialise_board/place_city.html',
                                 have_all_settlers_placed_a_city = True,
                                 resources = resources)
