@@ -24,11 +24,11 @@ def place_settlement():
 
     settlement_settler_ids = [settlement.settler_id for settlement in row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())]
 
-    settlers_with_no_victory_points = [settler for settler in settlers if settler.id not in settlement_settler_ids]   
+    settlers_with_no_settlements = [settler for settler in settlers if settler.id not in settlement_settler_ids]   
 
     if request.method == 'POST':
 
-        current_settler = settlers_with_no_victory_points.pop(0)
+        current_settler = settlers_with_no_settlements.pop(0)
         settlement_id = calculate_row_id.calculate_row_id("settlements")
         insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
                 'settler_id': current_settler['id'],
@@ -39,8 +39,8 @@ def place_settlement():
            
     resources = get_resources.get_resources()  
     
-    if settlers_with_no_victory_points:
-        return render_template('place_settlement.html', settler_to_place_settlement_name = settlers_with_no_victory_points[0].username,
+    if settlers_with_no_settlements:
+        return render_template('place_settlement.html', settler_to_place_settlement_name = settlers_with_no_settlements[0].username,
                         have_all_settlers_placed_a_settlement = False,
                         resources = resources)      
     else:
@@ -54,6 +54,12 @@ def place_city():
     update_game_progress.update_game_progress("initial settlement placement")
 
     settlers = get_settlers.get_settlers()
+
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
+
+    settlement_settler_ids = [settlement.settler_id for settlement in row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())]
+
+    settlers_wit_victory_points = [settler for settler in settlers if settler.id not in settlement_settler_ids]   
 
     settlers_with_one_victory_points = [settler for settler in settlers if settler['victory_points'] == 1]   
 
