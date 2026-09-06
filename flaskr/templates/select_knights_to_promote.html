@@ -20,14 +20,14 @@
                         {% for knight in current_settlers_turn_knights %}
                             <tr>
                                 <td>
-                                    {% if knight['is_promotable'] %}
+                                    {% if is_knight_promotable_dict[knight.settler_id] %}
                                         <input type="checkbox" name = "{{knight['id']}}" value ="{{knight['id']}}"> 
                                     {% else %}
                                         <input type="checkbox" name = "{{knight['id']}}" value ="{{knight['id']}}" disabled> 
                                     {% endif %}
                                 </td>
-                                <td>{{knight['level']}}</td>
-                                <td>{{knight['is_active']}}</td>
+                                <td>{{knight.level}}</td>
+                                <td>{{knight.is_active}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
