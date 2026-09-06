@@ -379,25 +379,29 @@ def build_knight(knight_id):
 
 @bp.route('/select_knights_to_promote')
 def select_knights_to_promote():
-    knights = get_knights.get_knights()
-    knight_dict = knight_rows_to_dict.knight_rows_to_dict(knights)
-    current_settlers_turn_knights = [knight for knight in knight_dict.values() if knight['settler_id'] == get_settler_turn.get()['settler_turn']]
-    settler_knights_type_count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight['level'] == knight_type])
+
+    knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
+
+    current_settlers_turn_knights = [knight for knight in knights if knight.settler_id == get_settler_turn.get()['settler_turn']]
+
+    is_knight_promotable_dict = {knight.settler_id : False for knight in current_settlers_turn_knights}
+
+    settler_knights_type_count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight.level == knight_type])
                             for knight_type in [2, 3]}
 
     for knight_type in settler_knights_type_count_dict:
 
         for knight in current_settlers_turn_knights:
 
-            if knight['level'] != knight_type - 1:
+            if knight.level != knight_type - 1:
                 continue
 
             if settler_knights_type_count_dict[knight_type] < 2:
-                knight['is_promotable'] = True
+                is_knight_promotable_dict[knight.settler_id] = True
 
     print(current_settlers_turn_knights)
 
-    return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights)
+    return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights, is_knight_promotable_dict = is_knight_promotable_dict)
 
 @bp.route('/promote_knight', methods=['POST'])
 def promote_knight():
