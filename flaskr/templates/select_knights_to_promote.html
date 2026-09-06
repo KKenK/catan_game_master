@@ -11,7 +11,7 @@
                         <tr>
                             <th>Select</th>
                             <th>Knight Strength</th>
-                            <th>Status</th>
+                            <th>Active</th>
                         </tr>
                     </thead>
 
@@ -27,7 +27,10 @@
                                     {% endif %}
                                 </td>
                                 <td>{{knight.level}}</td>
-                                <td>{{knight.is_active}}</td>
+                                {% if knight.is_active %}
+                                    <td><input type="checkbox" checked="True" disabled></td>
+                                {% else %}
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
