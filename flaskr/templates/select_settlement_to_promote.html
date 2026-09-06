@@ -24,12 +24,10 @@
                                 <td>
                                     <input type="radio" name="settlement_id" value="{{settlement['id']}}" required> 
                                 </td>
-                                <td>{{settlement['roll_1']}}</td>
-                                <td>{{settlement['resource_1_text']}}</td>
-                                <td>{{settlement['roll_2']}}</td>
-                                <td>{{settlement['resource_2_text']}}</td>
-                                <td>{{settlement['roll_3']}}</td>
-                                <td>{{settlement['resource_3_text']}}</td>
+                                {% for resource_hex in city.resource_hexes %}
+                                    <td>{{resource_hex.roll}}</td>
+                                    <td>{{resources[resource_hex.resource].name}}</td>
+                                {% endfor %}
                             </tr>
                         {% endfor %}
                     </tbody>

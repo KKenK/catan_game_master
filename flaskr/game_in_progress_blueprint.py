@@ -335,7 +335,9 @@ def select_settlement_to_promote():
 
     settler_whose_turn_it_is_settlements = [settlement for settlement in settlements if settlement.settler_id == settler_turn_id and not settlement.is_city]
 
-    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
+    resources = get_resources.get_resources()
+
+    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements, resources = resources)
 
 @bp.route('/promote_settlement', methods=['POST'])
 def promote_settlement():
