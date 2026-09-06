@@ -302,11 +302,11 @@ def build_settlement():
     
     settler_turn_id = get_settler_turn.get()['settler_turn']  
     
-    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
+    settler_to_place_settlement_name = Settler(get_settlers.get_settler_via_id(settler_turn_id))
     
     resources = get_resources.get_resources()  
 
-    return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id].username,
+    return render_template('place_settlement.html', settler_to_place_settlement_name = settler_to_place_settlement_name.username,
                         have_all_settlers_placed_a_settlement = False,
                         resources = resources)    
 
