@@ -316,6 +316,7 @@ def place_settlement():
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
     settlement_id = calculate_row_id.calculate_row_id("settlements")
+
     insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
             'settler_id': settler_turn_id,
             'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
@@ -330,9 +331,9 @@ def select_settlement_to_promote():
 
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
-    settlements_with_resource_name = get_settlements.get_settlements_with_resource_name()
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
-    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id and not settlement['is_city']]
+    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements if settlement.settler_id == settler_turn_id and not settlement.is_city]
 
     return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
 
