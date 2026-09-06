@@ -355,7 +355,7 @@ def revise_longest_road():
 
         current_settler = Settler(get_settlers.get_settler_via_id(settler_turn_id))
 
-        return render_template('revise_longest_road.html', current_settler = current_settler, current_settler_longest_road = current_settler.longest_road)
+        return render_template('revise_longest_road.html', current_settler_username = current_settler.username, current_settler_longest_road = current_settler.longest_road)
 
 @bp.route('update_longest_road', methods = ['POST'])
 def update_longest_road():
