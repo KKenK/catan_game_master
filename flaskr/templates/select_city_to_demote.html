@@ -25,12 +25,10 @@
                                     <td>
                                         <input type="radio" name="city_id" value="{{city['id']}}" required> 
                                     </td>
-                                    <td>{{city['roll_1']}}</td>
-                                    <td>{{city['resource_1_text']}}</td>
-                                    <td>{{city['roll_2']}}</td>
-                                    <td>{{city['resource_2_text']}}</td>
-                                    <td>{{city['roll_3']}}</td>
-                                    <td>{{city['resource_3_text']}}</td>
+                                    {% for resource_hex in city.resource_hexes %}
+                                        <td>{{resource_hex.roll}}</td>
+                                        <td>{{resources[resource_hex.resource].name}}</td>
+                                    {% endfor %}
                                 </tr>
                             {% endfor %}
                         </tbody>
