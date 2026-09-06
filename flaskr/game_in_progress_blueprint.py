@@ -192,7 +192,7 @@ def collect_resources():
 @bp.route('/add_victory_point_progress_card')
 def add_victory_point_progress_card():
 
-    settlers = row_objects_to_classes(Settler, get_settlers.get_settlers())
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
     return render_template('add_victory_point_progress_card.html', settlers = settlers)
 
@@ -216,16 +216,13 @@ def barbarians_attack():
 
     knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
 
-    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
+    cities = row_objects_to_classes.row_objects_to_classes(Settlement, get_cities.get_cities())
 
     armies_dict = {settler.id : Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers}
 
-    print(f"settler army strength dict: {armies_dict}")
     list_of_active_army_strengths = [settler_army.strength for settler_army in armies_dict.values()]
     
     army_strength_of_catan = sum(list_of_active_army_strengths)
-
-    cities = [settlement for settlement in settlements if settlement.is_city]
 
     barbarian_strength = len(cities)
 
@@ -234,20 +231,20 @@ def barbarians_attack():
     deactivate_knight.deactivate_all_knights()
 
     settler_ids_of_settlers_with_cities = set([city.settler_id for city in cities])
-    print(f"settlers with cities: {settler_ids_of_settlers_with_cities}")
+
     settler_ids_with_weakest_army_and_cities = []
         
     if not victory_for_catan:
 
         list_of_active_army_strengths.sort()
-        print(f"sorted list of active army strengths: {list_of_active_army_strengths}")
+
         while not settler_ids_with_weakest_army_and_cities:
 
             weakest_army = list_of_active_army_strengths.pop(0)
 
-            settlers_with_weakest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == weakest_army]
+            settlers_with_weakest_army = [settlers[settler_id] for settler_id in armies_dict if armies_dict[settler_id].strength == weakest_army]
 
-            settler_ids_with_weakest_army_and_cities = [settler['id'] for settler in settlers_with_weakest_army if settler['id'] in settler_ids_of_settlers_with_cities]
+            settler_ids_with_weakest_army_and_cities = [settler.id for settler in settlers_with_weakest_army if settler.id in settler_ids_of_settlers_with_cities]
 
             if weakest_army:
                 continue
@@ -261,12 +258,12 @@ def barbarians_attack():
     else:    
         largest_army = max(list_of_active_army_strengths)
 
-        settlers_with_largest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == largest_army]
+        settlers_with_largest_army = [settlers[settler_id] for settler_id in armies_dict if armies_dict[settler_id].strength == largest_army]
 
         is_tie = True if len(settlers_with_largest_army) > 1 else False
 
         if not is_tie:
-            increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0]['id']) 
+            increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0].id) 
 
         return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
 
@@ -275,28 +272,30 @@ def select_city_to_demote():
     
     update_game_progress.update_game_progress('resolving_defeat')
 
-    settlers_who_contributed_least_to_catans_defence = get_settlers_that_contributed_least_to_catans_defence.get_settlers_that_contributed_least_to_catans_defence()
-    
-    if request.method == 'POST' and settlers_who_contributed_least_to_catans_defence:
+    ids_of_settlers_who_contributed_least_to_catans_defence = [row_object['id'] for row_object in get_settlers_that_contributed_least_to_catans_defence.get_settlers_that_contributed_least_to_catans_defence()]
+
+    if request.method == 'POST' and ids_of_settlers_who_contributed_least_to_catans_defence:
 
         update_is_city_column_of_settlement_to_false.update_is_city_column_of_settlement_to_false(request.form.get('city_id'))
 
-        id_of_settler_demoting_city = settlers_who_contributed_least_to_catans_defence.pop(0)['id']
+        id_of_settler_demoting_city = ids_of_settlers_who_contributed_least_to_catans_defence.pop(0)
 
         remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table(id_of_settler_demoting_city)
            
-    if not settlers_who_contributed_least_to_catans_defence:
+    if not ids_of_settlers_who_contributed_least_to_catans_defence:
         return render_template('select_city_to_demote.html', defeat_resolved = True)
     
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    cities = get_cities.get_cities_with_resource_name()
+    cities = row_objects_to_classes.row_objects_to_classes(Settlement, get_cities.get_cities())
 
-    settler_to_demote_city_id = settlers_who_contributed_least_to_catans_defence[0]['id']
+    resources = get_resources.get_resources()  
 
-    cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city_id]
+    settler_to_demote_city_id = ids_of_settlers_who_contributed_least_to_catans_defence[0]
 
-    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city_id]['username'], cities_of_settler_to_demote = cities_of_settler_to_demote)
+    cities_of_settler_to_demote = [city for city in cities if city.settler_id == settler_to_demote_city_id]
+
+    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city_id].username, cities_of_settler_to_demote = cities_of_settler_to_demote, resources = resources)
 
 @bp.route('/build_settlement')
 def build_settlement():
