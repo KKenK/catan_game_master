@@ -1,6 +1,13 @@
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for
 )
+from .helper_classes.army import Army
+from .helper_classes.knight import Knight
+from .helper_classes.portfolio import Portfolio
+from .helper_classes.settlement import Settlement
+from .helper_classes.settler import Settler
+
+
 from .helper_modules import (get_game_progress,
                              get_game_progress_data,
                              get_settler_turn, 
@@ -19,13 +26,13 @@ from .helper_modules import (get_game_progress,
                              activate_knight,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
-                             decrement_victory_points,
-                             increment_victory_points,
+                             increment_victory_point_cards,
                              increment_defender_of_catan,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
                              get_resources,
                              reset_barbarians_distance_from_catan,
+                             row_objects_to_classes,
                              insert_settler_into_settlers_that_contributed_least_to_catans_defence_table,
                              remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table,
                              update_current_settlers_longest_road,
@@ -42,55 +49,41 @@ def game():
 
     if game_progress['progress'] != "game_in_progress":
             update_game_progress.update_game_progress("game_in_progress")
+    
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    settlers = get_settlers.get_settlers()
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
-    victor = [settler for settler in settlers if settler['victory_points'] >= 13]
+    settler_portfolios = {settler_index : Portfolio([settlement for settlement in settlements if settlement.settler_id == settler_index], settler_index) for settler_index in range(len(settlers))}
+
+    victory_points = {settler.id : settler.calculate_victory_points(settler_portfolios[settler.id].value) for settler in settlers}
+
+    victor = [victory_point[0] for victory_point in victory_points.items() if victory_point[1] >= 13]
 
     if victor:
         return render_template('victory_achieved.html', victor = victor[0])
+
+    knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
+
+    armies = {settler.id : Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers}
     
     settler_turn_id = game_progress['settler_turn']
-    settlers_turn_username =  settlers[settler_turn_id]['username']
+    settlers_turn_username =  settlers[settler_turn_id].username
 
-    settler_ids = sorted([settler['id'] for settler in settlers])
-
-    knights = get_knights.get_knights()
-
-    current_settler_basic_knight_count = len([knight for knight in knights if knight['settler_id'] == settler_turn_id and knight['level'] == 1])
+    current_settler_basic_knight_count = len([knight for knight in armies[settler_turn_id].knights if knight.level == 1])
 
     maximum_number_of_basic_knights_reached = True if current_settler_basic_knight_count >= 2 else False
  
-    knights_settler_ids = list(set([knight['settler_id'] for knight in knights]))
-    #print(f"knights_settler_ids: {knights_settler_ids}")
-
-    list_of_active_knights_by_settler_id = [[knight['level'] for knight in knights if knight['settler_id'] == knight_settler_id and knight['is_active']] for knight_settler_id in knights_settler_ids]
-    #print(f"list_of_active_knights_by_settler_id: {list_of_active_knights_by_settler_id}")
-    
     id_of_next_knight_to_be_built = len(knights)
 
-    knight_strength_dict = {knights_settler_ids[i] : sum(list_of_active_knights_by_settler_id[i]) for i in range(len(knights_settler_ids))}
-    #print(f"knight_strength_dict: {knight_strength_dict}")
+    active_knights_count = sum([army.strength for army in armies.values()])
 
-    settler_table_keys = list(settlers[0].keys())
-    settlers_dict = {settler['id'] : {settler_table_key : settler[settler_table_key] for settler_table_key in settler_table_keys} for settler in settlers}
-    #print (f"settler_dict: {settlers_dict}")
-
-    for settler in settlers:
-
-        settlers_dict[settler['id']]['army_strength'] = 0 if settler['id'] not in knights_settler_ids else knight_strength_dict[settler['id']]
-        settlers_dict[settler['id']]['knights'] = [knight for knight in knights if knight['settler_id'] == settler['id']]
-
-    settlements = get_settlements.get_settlements()
-
-    active_knights_count = sum(knight_strength_dict.values())
-
-    barbarian_strength = len([settlement for settlement in settlements if settlement['is_city']])
+    barbarian_strength = len([settlement for settlement in settlements if settlement.is_city])
 
     route_is_game_index = True if not request.path.split('/')[-1].isdigit() else False
     link_prefix = '' if route_is_game_index else '../'
 
-    return render_template('game_page.html', settler_ids = settler_ids, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarians_distance_from_catan = game_progress['barbarians_distance_from_catan'], settler_dicts = settlers_dict, maximum_number_of_basic_knights_reached = maximum_number_of_basic_knights_reached, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
+    return render_template('game_page.html', settlers = settlers, victory_points = victory_points, armies = armies, settlers_turn_username = settlers_turn_username, active_knights_count = active_knights_count, barbarian_strength = barbarian_strength, barbarians_distance_from_catan = game_progress['barbarians_distance_from_catan'], maximum_number_of_basic_knights_reached = maximum_number_of_basic_knights_reached, id_of_next_knight_to_be_built = id_of_next_knight_to_be_built, link_prefix = link_prefix)
 
 @bp.route('/first_settler_turn')
 def first_settler_turn():
@@ -99,11 +92,11 @@ def first_settler_turn():
 
     settler_turn = game_progress['settler_turn']
 
-    settlers = get_settlers.get_settlers()
+    current_settler = Settler(get_settlers.get_settlers()[settler_turn])
 
     update_game_progress.update_game_progress('start_turn')
 
-    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'])
+    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = current_settler.username)
 
 @bp.route('/start_turn')
 def start_turn():
@@ -114,27 +107,29 @@ def start_turn():
 
     is_settler_two = game_progress['is_settler_two']
 
-    settlers = get_settlers.get_settlers()
+    settler_row_objects = get_settlers.get_settlers()
 
-    if get_game_progress.get_game_progress() == 'start_turn':
+    current_settler = Settler(get_settlers.get_settlers()[settler_turn])
+
+    if not get_game_progress.get_game_progress() == 'start_turn':      
+    
+        update_game_progress.update_game_progress('start_turn')
         
-        return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
-    
-    update_game_progress.update_game_progress('start_turn')
-    
-    number_of_settlers = len(settlers)
+        number_of_settlers = len(settler_row_objects)
 
-    if number_of_settlers > 4:
-        is_settler_two = 1 if not is_settler_two else 0
+        if number_of_settlers > 4:
+            is_settler_two = 1 if not is_settler_two else 0
 
-    settler_turn += 3 if is_settler_two else 1
+        settler_turn += 3 if is_settler_two else 1
 
-    if settler_turn >= number_of_settlers:
-        settler_turn -= number_of_settlers
+        if settler_turn >= number_of_settlers:
+            settler_turn -= number_of_settlers
 
-    update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
+        current_settler = Settler(get_settlers.get_settlers()[settler_turn])
 
-    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = settlers[settler_turn]['username'], is_settler_two = is_settler_two)
+        update_settler_turn.update_settler_turn(settler_turn, is_settler_two)
+
+    return render_template('start_turn.html', settler_turn = settler_turn, settler_username = current_settler.username, is_settler_two = is_settler_two)
 
 @bp.route('/collect_resources', methods=['GET', 'POST'])
 def collect_resources():
@@ -164,83 +159,70 @@ def collect_resources():
 
     number_rolled = int(dice_roll['red']) + int(dice_roll['white'])
     
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
     
-    settlements = get_settlements.get_settlements()
-
-    settlements_dict = {settlement['id']: {'settler_id': settlement['settler_id'],
-                                           'rolls': [(settlement['roll_1'], settlement['resource_1']),
-                                           (settlement['roll_2'], settlement['resource_2']),
-                                           (settlement['roll_3'], settlement['resource_3'])],
-                                           'is_city': settlement['is_city']}
-                                           for settlement in settlements}
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
     resources_and_commodities = get_resources_and_commodities.get_resources_and_commodities()
     resources_and_commodities_dict = {item['id']: {'settlement': item[1], 'city': item[2]} for item in resources_and_commodities}
 
-    settlers_to_collect_dict = {settler['id'] : [] for settler in settlers}
-  
-    for settler in settlers:
-        
-        items_to_collect_list = []
-        
-        for settlement in settlements_dict.values(): 
-            
-            if settler['id'] != settlement['settler_id']:
+    settlers_to_collect_dict = {settler.id : [] for settler in settlers}
+
+    for settlement in settlements:
+
+        items_to_collect_list = [] 
+
+        for resource_hex in settlement.resource_hexes:
+            if not resource_hex.roll == number_rolled:
                 continue
-                
-            for roll in settlement['rolls']:
-                if roll[0] != number_rolled:
-                      continue
+           
+            items_to_collect_list.append(resources_and_commodities_dict[resource_hex.resource]['settlement'])
 
-                items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['settlement'])
-                
-                if settlement['is_city']:
-                    items_to_collect_list.append(resources_and_commodities_dict[roll[1]]['city'])    
+            if not settlement.is_city:
+                continue
+
+            items_to_collect_list.append(resources_and_commodities_dict[resource_hex.resource]['city'])
         
-        settlers_to_collect_dict[settler['id']] = {item : items_to_collect_list.count(item) for item in set(items_to_collect_list)}
-    
-    print(settlers_to_collect_dict)     
+        settlers_to_collect_dict[settlement.settler_id].extend(items_to_collect_list)
 
-    return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_dict = settlers_to_collect_dict, barbarians_attack = barbarians_attack)
+    settlers_to_collect_sum_dict = {settler.id : {item : settlers_to_collect_dict[settler.id].count(item) for item in set(settlers_to_collect_dict[settler.id])} for settler in settlers if settlers_to_collect_dict[settler.id]}    
+
+    return render_template('collect_resources.html', settlers = settlers, settlers_to_collect_sum_dict = settlers_to_collect_sum_dict, barbarians_attack = barbarians_attack)
 
 @bp.route('/add_victory_point_progress_card')
 def add_victory_point_progress_card():
 
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
     return render_template('add_victory_point_progress_card.html', settlers = settlers)
 
-@bp.route('/add_victory_point', methods=['POST'])
-def add_victory_point():
+@bp.route('/increment_victory_point_card', methods=['POST'])
+def increment_victory_point_card():
 
     id_of_settler_to_increment =  int(request.form['id'])
 
-    increment_victory_points.increment_victory_points(id_of_settler_to_increment)
+    increment_victory_point_cards.increment_victory_point_cards(id_of_settler_to_increment)
 
-    settlers = get_settlers.get_settlers()
+    incremented_settler = Settler(get_settlers.get_settlers()[id_of_settler_to_increment])
     
-    return render_template('victory_point_added.html', incremented_settler = settlers[id_of_settler_to_increment])
+    return render_template('victory_point_card_added.html', settler = incremented_settler)
 
 @bp.route('/barbarians_attack')
 def barbarians_attack():
 
     reset_barbarians_distance_from_catan.reset_barbarians_distance_from_catan()
     
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    knights = get_knights.get_knights()
+    knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
 
-    settlements = get_settlements.get_settlements()
+    cities = row_objects_to_classes.row_objects_to_classes(Settlement, get_cities.get_cities())
 
-    settler_army_dict = {settler['id'] : sum([knight['level'] for knight in knights if knight['settler_id'] == settler['id'] and knight['is_active']])
-                         for settler in settlers}
-    print(f"settler army strength dict: {settler_army_dict}")
-    list_of_active_army_strengths = [settler_army_strength for settler_army_strength in settler_army_dict.values()]
+    armies_dict = {settler.id : Army(settler.id, [knight for knight in knights if knight.settler_id == settler.id]) for settler in settlers}
+
+    list_of_active_army_strengths = [settler_army.strength for settler_army in armies_dict.values()]
     
     army_strength_of_catan = sum(list_of_active_army_strengths)
-
-    cities = get_cities.get_cities()
 
     barbarian_strength = len(cities)
 
@@ -248,21 +230,21 @@ def barbarians_attack():
 
     deactivate_knight.deactivate_all_knights()
 
-    settler_ids_of_settlers_with_cities = set([city['settler_id'] for city in cities])
-    print(f"settlers with cities: {settler_ids_of_settlers_with_cities}")
+    settler_ids_of_settlers_with_cities = set([city.settler_id for city in cities])
+
     settler_ids_with_weakest_army_and_cities = []
         
     if not victory_for_catan:
 
         list_of_active_army_strengths.sort()
-        print(f"sorted list of active army strengths: {list_of_active_army_strengths}")
+
         while not settler_ids_with_weakest_army_and_cities:
 
             weakest_army = list_of_active_army_strengths.pop(0)
 
-            settlers_with_weakest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == weakest_army]
+            settlers_with_weakest_army = [settlers[settler_id] for settler_id in armies_dict if armies_dict[settler_id].strength == weakest_army]
 
-            settler_ids_with_weakest_army_and_cities = [settler['id'] for settler in settlers_with_weakest_army if settler['id'] in settler_ids_of_settlers_with_cities]
+            settler_ids_with_weakest_army_and_cities = [settler.id for settler in settlers_with_weakest_army if settler.id in settler_ids_of_settlers_with_cities]
 
             if weakest_army:
                 continue
@@ -276,13 +258,12 @@ def barbarians_attack():
     else:    
         largest_army = max(list_of_active_army_strengths)
 
-        settlers_with_largest_army = [settlers[settler_id] for settler_id in settler_army_dict if settler_army_dict[settler_id] == largest_army]
+        settlers_with_largest_army = [settlers[settler_id] for settler_id in armies_dict if armies_dict[settler_id].strength == largest_army]
 
         is_tie = True if len(settlers_with_largest_army) > 1 else False
 
         if not is_tie:
-            increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0]['id']) 
-            increment_victory_points.increment_victory_points(settlers_with_largest_army[0]['id'])
+            increment_defender_of_catan.increment_defender_of_catan(settlers_with_largest_army[0].id) 
 
         return render_template('barbarians_attack.html', victory_for_catan = victory_for_catan, is_tie = is_tie, settlers_with_largest_army = settlers_with_largest_army)
 
@@ -291,43 +272,44 @@ def select_city_to_demote():
     
     update_game_progress.update_game_progress('resolving_defeat')
 
-    settlers_who_contributed_least_to_catans_defence = get_settlers_that_contributed_least_to_catans_defence.get_settlers_that_contributed_least_to_catans_defence()
-    
-    if request.method == 'POST' and settlers_who_contributed_least_to_catans_defence:
+    ids_of_settlers_who_contributed_least_to_catans_defence = [row_object['id'] for row_object in get_settlers_that_contributed_least_to_catans_defence.get_settlers_that_contributed_least_to_catans_defence()]
+
+    if request.method == 'POST' and ids_of_settlers_who_contributed_least_to_catans_defence:
 
         update_is_city_column_of_settlement_to_false.update_is_city_column_of_settlement_to_false(request.form.get('city_id'))
 
-        id_of_settler_demoting_city = settlers_who_contributed_least_to_catans_defence.pop(0)['id']
+        id_of_settler_demoting_city = ids_of_settlers_who_contributed_least_to_catans_defence.pop(0)
 
         remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table.remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table(id_of_settler_demoting_city)
-
-        decrement_victory_points.decrement_victory_points(id_of_settler_demoting_city) 
            
-    if not settlers_who_contributed_least_to_catans_defence:
+    if not ids_of_settlers_who_contributed_least_to_catans_defence:
         return render_template('select_city_to_demote.html', defeat_resolved = True)
     
-    settlers = get_settlers.get_settlers()
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    cities = get_cities.get_cities_with_resource_name()
+    cities = row_objects_to_classes.row_objects_to_classes(Settlement, get_cities.get_cities())
 
-    settler_to_demote_city_id = settlers_who_contributed_least_to_catans_defence[0]['id']
+    resources = get_resources.get_resources()  
 
-    cities_of_settler_to_demote = [city for city in cities if city['settler_id'] == settler_to_demote_city_id]
+    settler_to_demote_city_id = ids_of_settlers_who_contributed_least_to_catans_defence[0]
 
-    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city_id]['username'], cities_of_settler_to_demote = cities_of_settler_to_demote)
+    cities_of_settler_to_demote = [city for city in cities if city.settler_id == settler_to_demote_city_id]
+
+    return render_template('select_city_to_demote.html', defeat_resolved = False, settler_username = settlers[settler_to_demote_city_id].username, cities_of_settler_to_demote = cities_of_settler_to_demote, resources = resources)
 
 @bp.route('/build_settlement')
 def build_settlement():
     
     settler_turn_id = get_settler_turn.get()['settler_turn']  
     
-    settlers = get_settlers.get_settlers()
+    settler_to_place_settlement_name = Settler(get_settlers.get_settler_via_id(settler_turn_id))
     
     resources = get_resources.get_resources()  
 
-    return render_template('place_settlement.html', settler_to_place_settlement_name = settlers[settler_turn_id]['username'],
+    return render_template('place_settlement.html', settler_to_place_settlement_name = settler_to_place_settlement_name.username,
                         have_all_settlers_placed_a_settlement = False,
-                        resources = resources)    
+                        resources = resources,
+                        return_button_relative_path_prefix = '')    
 
 @bp.route('/place_settlement', methods=['POST'])
 def place_settlement():
@@ -335,6 +317,7 @@ def place_settlement():
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
     settlement_id = calculate_row_id.calculate_row_id("settlements")
+
     insert_settlement_into_settlements_table.insert_settlement_into_settlements_table({'settlement_id': settlement_id,
             'settler_id': settler_turn_id,
             'resource_1': request.form['resource_1'], 'roll_1': request.form['roll_1'],
@@ -342,8 +325,6 @@ def place_settlement():
             'resource_3': request.form['resource_3'], 'roll_3': request.form['roll_3'],
             'is_city': False})
         
-    increment_victory_points.increment_victory_points(settler_turn_id)
-
     return game()
 
 @bp.route('/select_settlement_to_promote')
@@ -351,11 +332,13 @@ def select_settlement_to_promote():
 
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
-    settlements_with_resource_name = get_settlements.get_settlements_with_resource_name()
+    settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
-    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements_with_resource_name if settlement['settler_id'] == settler_turn_id and not settlement['is_city']]
+    settler_whose_turn_it_is_settlements = [settlement for settlement in settlements if settlement.settler_id == settler_turn_id and not settlement.is_city]
 
-    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements)
+    resources = get_resources.get_resources()
+
+    return render_template('select_settlement_to_promote.html', settler_whose_turn_it_is_settlements = settler_whose_turn_it_is_settlements, resources = resources)
 
 @bp.route('/promote_settlement', methods=['POST'])
 def promote_settlement():
@@ -364,8 +347,6 @@ def promote_settlement():
     
     update_is_city_column_of_settlement_to_true.update_is_city_column_of_settlement_to_true(settlement_id)
 
-    increment_victory_points.increment_victory_points(get_settler_turn.get()['settler_turn'])
-
     return game()
 
 @bp.route('/revise_longest_road')
@@ -373,9 +354,9 @@ def revise_longest_road():
 
         settler_turn_id = get_settler_turn.get()['settler_turn']
 
-        current_settler = [settler for settler in get_settlers.get_settlers() if settler['id'] == settler_turn_id][0]
+        current_settler = Settler(get_settlers.get_settler_via_id(settler_turn_id))
 
-        return render_template('revise_longest_road.html', current_settler = current_settler, current_settler_longest_road = current_settler['longest_road'])
+        return render_template('revise_longest_road.html', current_settler_username = current_settler.username, current_settler_longest_road = current_settler.longest_road)
 
 @bp.route('update_longest_road', methods = ['POST'])
 def update_longest_road():
@@ -399,25 +380,29 @@ def build_knight(knight_id):
 
 @bp.route('/select_knights_to_promote')
 def select_knights_to_promote():
-    knights = get_knights.get_knights()
-    knight_dict = knight_rows_to_dict.knight_rows_to_dict(knights)
-    current_settlers_turn_knights = [knight for knight in knight_dict.values() if knight['settler_id'] == get_settler_turn.get()['settler_turn']]
-    settler_knights_type_count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight['level'] == knight_type])
+
+    knights = row_objects_to_classes.row_objects_to_classes(Knight, get_knights.get_knights())
+
+    current_settlers_turn_knights = [knight for knight in knights if knight.settler_id == get_settler_turn.get()['settler_turn']]
+
+    is_knight_promotable_dict = {knight.settler_id : False for knight in current_settlers_turn_knights}
+
+    settler_knights_type_count_dict = {knight_type : len([knight for knight in current_settlers_turn_knights if knight.level == knight_type])
                             for knight_type in [2, 3]}
 
     for knight_type in settler_knights_type_count_dict:
 
         for knight in current_settlers_turn_knights:
 
-            if knight['level'] != knight_type - 1:
+            if knight.level != knight_type - 1:
                 continue
 
             if settler_knights_type_count_dict[knight_type] < 2:
-                knight['is_promotable'] = True
+                is_knight_promotable_dict[knight.settler_id] = True
 
     print(current_settlers_turn_knights)
 
-    return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights)
+    return render_template('select_knights_to_promote.html', current_settlers_turn_knights = current_settlers_turn_knights, is_knight_promotable_dict = is_knight_promotable_dict)
 
 @bp.route('/promote_knight', methods=['POST'])
 def promote_knight():

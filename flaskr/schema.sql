@@ -8,8 +8,7 @@ CREATE TABLE game_progress (
 CREATE TABLE settlers (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
-    victory_points INTEGER DEFAULT 0 NOT NULL,
-    victory_point_card INTEGER DEFAULT 0 NOT NULL,
+    victory_point_cards INTEGER DEFAULT 0 NOT NULL,
     longest_road INTEGER DEFAULT 1 NOT NULL,
     has_longest_road INTEGER DEFAULT 0 NOT NULL,
     defender_of_catan INTEGER DEFAULT 0 NOT NULL,

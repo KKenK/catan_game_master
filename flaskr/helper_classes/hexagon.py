@@ -1,11 +1,11 @@
 class Hexagon():
 
-    def __init__(self, id):
+    def __init__(self, id = None, roll = None, resource = None):
 
         self.id = id
 
-        self.roll = None
+        self.roll = roll
 
-        self.resource = None
+        self.resource = resource
 
     
