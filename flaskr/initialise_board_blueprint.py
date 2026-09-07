@@ -54,8 +54,7 @@ def place_settlement():
 @bp.route('/place_city', methods =['GET', 'POST'])
 def place_city():
 
-    update_game_progress.update_game_progress("initial settlement placement")
-
+    update_game_progress.update_game_progress("initial city placement")
     settlers = get_settlers.get_settlers()
 
     settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
