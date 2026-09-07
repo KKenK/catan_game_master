@@ -30,4 +30,4 @@ def register_settlers():
         maximum_settlers_reached = True
 
 
-    return render_template('register_settler.html', next_settler_number = next_settler_id + 1, maximum_settlers_reached = maximum_settlers_reached, minimum_settlers_required = minimum_settlers_required)
+    return render_template('register_settler.html', next_settler_number = next_settler_id + 1, maximum_settlers_reached = maximum_settlers_reached, minimum_settlers_required = minimum_settlers_required, return_button_link_prefix = '.')
