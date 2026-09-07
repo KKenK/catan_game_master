@@ -55,7 +55,6 @@ def place_settlement():
 def place_city():
 
     update_game_progress.update_game_progress("initial city placement")
-    settlers = get_settlers.get_settlers()
 
     settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
