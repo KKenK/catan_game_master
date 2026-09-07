@@ -308,7 +308,8 @@ def build_settlement():
 
     return render_template('place_settlement.html', settler_to_place_settlement_name = settler_to_place_settlement_name.username,
                         have_all_settlers_placed_a_settlement = False,
-                        resources = resources)    
+                        resources = resources,
+                        return_button_relative_path = '')    
 
 @bp.route('/place_settlement', methods=['POST'])
 def place_settlement():
