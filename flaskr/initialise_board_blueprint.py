@@ -43,11 +43,13 @@ def place_settlement():
     if settlers_with_no_settlements:
         return render_template('place_settlement.html', settler_to_place_settlement_name = settlers_with_no_settlements[0].username,
                         have_all_settlers_placed_a_settlement = False,
-                        resources = resources)      
+                        resources = resources,
+                        return_button_relative_path = '.')      
     else:
         return render_template('place_settlement.html', 
                         have_all_settlers_placed_a_settlement = True,
-                        resources = resources)
+                        resources = resources,
+                        return_button_relative_path = '.')
 
 @bp.route('/place_city', methods =['GET', 'POST'])
 def place_city():
@@ -78,11 +80,13 @@ def place_city():
     if settlers_with_no_cities:
         return render_template('initialise_board/place_city.html', settler_to_place_city_name = settlers_with_no_cities[-1].username,
                                 have_all_settlers_placed_a_city = False,
-                                resources = resources)
+                                resources = resources,
+                                return_button_relative_path = '.')
     else:
         return render_template('initialise_board/place_city.html',
                                 have_all_settlers_placed_a_city = True,
-                                resources = resources)
+                                resources = resources,
+                                return_button_relative_path = '.')
     
 
 
