@@ -18,7 +18,9 @@ from .helper_modules import (get_game_progress,
                              get_settlements,
                              get_cities,
                              get_dice_roll,
-                             calculate_row_id, 
+                             calculate_row_id,
+                             assign_has_longest_road,
+                             unassign_has_longest_road, 
                              update_game_progress,
                              update_settler_turn,
                              knight_rows_to_dict,
@@ -363,11 +365,33 @@ def update_longest_road():
 
     current_settler_longest_road = request.form['current_settler_longest_road']
 
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
+
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
     update_current_settlers_longest_road.update_current_settlers_longest_road(current_settler_longest_road, settler_turn_id)
 
-    return game()
+    if current_settler_longest_road >= 5:
+
+        settler_with_longest_road = [settler for settler in settlers if settler.has_longest_road]
+
+        longest_road_assigned = True if settler_with_longest_road else False
+
+        if not longest_road_assigned:
+
+            assign_has_longest_road.assign_has_longest_road(settler_turn_id)
+
+            return game()   
+        
+        new_longest_road = True if current_settler_longest_road > settler_with_longest_road.longest_road else False
+
+        if new_longest_road:
+
+            unassign_has_longest_road.unassign_has_longest_road(settler_with_longest_road.id)
+
+            assign_has_longest_road.assign_has_longest_road(settler_turn_id)
+            
+    return game()   
 
 @bp.route('/build_knight/<int:knight_id>')
 def build_knight(knight_id):
