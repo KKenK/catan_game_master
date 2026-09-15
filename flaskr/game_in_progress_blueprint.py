@@ -393,6 +393,15 @@ def update_longest_road():
             
     return game()   
 
+@bp.route('/revise_another_settlers_longest_road')
+def revise_another_settlers_longest_road():
+
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
+
+    settlers_minus_current_settler = [settler for settler in settlers if settler.id != get_settler_turn.get()['settler_turn']]
+
+    return render_template('revise_another_settlers_longest_road.html', settlers_minus_current_settler = settlers_minus_current_settler)
+
 @bp.route('/build_knight/<int:knight_id>')
 def build_knight(knight_id):
         
