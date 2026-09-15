@@ -363,7 +363,7 @@ def revise_longest_road():
 @bp.route('update_longest_road', methods = ['POST'])
 def update_longest_road():
 
-    current_settler_longest_road = request.form['current_settler_longest_road']
+    current_settler_longest_road = int(request.form['current_settler_longest_road'])
 
     settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
