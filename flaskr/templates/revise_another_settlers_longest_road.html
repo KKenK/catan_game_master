@@ -11,6 +11,7 @@
 
                     <div>
                         <label for="{{settler.id}}">{{settler.username}} current longest road: </label>
+                        <input type="hidden" name= "settler_id" value="{{settler.id}}">
                         <input type = "number" name = "{{settler.id}}" id = "{{settler.id}}" value = "{{settler.longest_road}}" min = "1">
                         <button type ="submit">Update</button>
                     </div>

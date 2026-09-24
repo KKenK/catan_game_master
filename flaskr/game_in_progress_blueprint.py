@@ -399,7 +399,7 @@ def revise_another_settlers_longest_road():
     settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
     settlers_minus_current_settler = [settler for settler in settlers if settler.id != get_settler_turn.get()['settler_turn']]
-
+    
     return render_template('revise_another_settlers_longest_road.html', settlers_minus_current_settler = settlers_minus_current_settler)
 
 @bp.route('/update_another_settlers_longest_road/<int:settler_id_of_longest_road_to_be_updated>', methods = ['POST'])
