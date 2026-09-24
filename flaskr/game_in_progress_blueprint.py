@@ -402,6 +402,13 @@ def revise_another_settlers_longest_road():
 
     return render_template('revise_another_settlers_longest_road.html', settlers_minus_current_settler = settlers_minus_current_settler)
 
+@bp.route('/update_another_settlers_longest_road/<int:settler_id_of_longest_road_to_be_updated>', methods = ['POST'])
+def update_another_settlers_longest_road(settler_id_of_longest_road_to_be_updated):
+
+    update_current_settlers_longest_road.update_current_settlers_longest_road(request.form[str(settler_id_of_longest_road_to_be_updated)], settler_id_of_longest_road_to_be_updated)
+
+    return game()
+
 @bp.route('/build_knight/<int:knight_id>')
 def build_knight(knight_id):
         
