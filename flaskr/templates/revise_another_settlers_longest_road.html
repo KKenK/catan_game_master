@@ -7,7 +7,7 @@
         
         <main>
             {% for settler in settlers_minus_current_settler %}
-                <form action="update_another_settlers_longest_road/{{settler.id}}" method="post">
+                <form action="update_another_settlers_longest_road" method="post">
 
                     <div>
                         <label for="{{settler.id}}">{{settler.username}} current longest road: </label>

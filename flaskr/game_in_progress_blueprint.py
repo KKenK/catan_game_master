@@ -373,7 +373,7 @@ def update_longest_road():
 
     if current_settler_longest_road >= 5:
 
-        settler_with_longest_road = [settler for settler in settlers if settler.has_longest_road]
+        settler_with_longest_road = [settler for settler in settlers if settler.has_longest_road][0]
 
         longest_road_assigned = True if settler_with_longest_road else False
 
@@ -402,10 +402,37 @@ def revise_another_settlers_longest_road():
     
     return render_template('revise_another_settlers_longest_road.html', settlers_minus_current_settler = settlers_minus_current_settler)
 
-@bp.route('/update_another_settlers_longest_road/<int:settler_id_of_longest_road_to_be_updated>', methods = ['POST'])
-def update_another_settlers_longest_road(settler_id_of_longest_road_to_be_updated):
+@bp.route('/update_another_settlers_longest_road', methods = ['POST'])
+def update_another_settlers_longest_road():
+
+    settler_id_of_longest_road_to_be_updated = int(request.form['settler_id'])
 
     update_current_settlers_longest_road.update_current_settlers_longest_road(request.form[str(settler_id_of_longest_road_to_be_updated)], settler_id_of_longest_road_to_be_updated)
+
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
+
+    updated_settler = settlers[settler_id_of_longest_road_to_be_updated]
+    
+    if not updated_settler.has_longest_road:
+    
+        return game()
+
+    if updated_settler.longest_road < 5:
+        unassign_has_longest_road.unassign_has_longest_road(settler_id_of_longest_road_to_be_updated)
+
+    longest_road = max([settler.longest_road for settler in settlers])
+
+    if longest_road < 5:
+    
+        return game()
+
+    settlers_with_the_new_longest_road = [settler for settler in settlers if settler.longest_road == longest_road]
+
+    if len(settlers_with_the_new_longest_road) > 1:
+
+        return game()
+
+    assign_has_longest_road.assign_has_longest_road(settlers_with_the_new_longest_road[0].id)
 
     return game()
 
