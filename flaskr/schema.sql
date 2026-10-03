@@ -12,7 +12,10 @@ CREATE TABLE settlers (
     longest_road INTEGER DEFAULT 1 NOT NULL,
     has_longest_road INTEGER DEFAULT 0 NOT NULL,
     defender_of_catan INTEGER DEFAULT 0 NOT NULL,
-    army_strength INTEGER DEFAULT 0 NOT NULL 
+    army_strength INTEGER DEFAULT 0 NOT NULL,
+    trade INTEGER DEFAULT 0 NOT NULL,
+    politics INTEGER DEFAULT 0 NOT NULL,
+    science INTEGER DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE settlements (
