@@ -373,7 +373,7 @@ def update_longest_road():
 
     if current_settler_longest_road >= 5:
 
-        settler_with_longest_road = [settler for settler in settlers if settler.has_longest_road][0]
+        settler_with_longest_road = [settler for settler in settlers if settler.has_longest_road]
 
         longest_road_assigned = True if settler_with_longest_road else False
 
@@ -383,14 +383,20 @@ def update_longest_road():
 
             return game()   
         
-        new_longest_road = True if current_settler_longest_road > settler_with_longest_road.longest_road else False
+        new_longest_road = True if current_settler_longest_road > settler_with_longest_road[0].longest_road else False
 
         if new_longest_road:
 
-            unassign_has_longest_road.unassign_has_longest_road(settler_with_longest_road.id)
+            unassign_has_longest_road.unassign_has_longest_road(settler_with_longest_road[0].id)
 
             assign_has_longest_road.assign_has_longest_road(settler_turn_id)
-            
+
+    else:
+        
+        if settlers[settler_turn_id].has_longest_road:
+        
+            unassign_has_longest_road.unassign_has_longest_road(settler_turn_id)
+         
     return game()   
 
 @bp.route('/revise_another_settlers_longest_road')
