@@ -499,3 +499,8 @@ def knight_deactivation(knight_id):
     deactivate_knight.deactivate_knight(knight_id)
   
     return game()
+
+@bp.route('select_city_improvement')
+def select_city_improvement():
+
+    return render_template('select_city_improvement.html')
