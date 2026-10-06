@@ -6,6 +6,9 @@ class Settler():
         self.longest_road  = settler_row['longest_road']
         self.has_longest_road  = settler_row['has_longest_road']
         self.defender_of_catan = settler_row['defender_of_catan']
+        self.trade = settler_row['trade']
+        self.politics = settler_row['politics']
+        self.science = settler_row['science']
         
     def calculate_victory_points(self, settler_portfolio_worth):
 
