@@ -502,5 +502,9 @@ def knight_deactivation(knight_id):
 
 @bp.route('select_city_improvement')
 def select_city_improvement():
+    
+    settlers = row_objects_to_classes.row_objects_to_classes(Settler, get_settlers.get_settlers())
 
-    return render_template('select_city_improvement.html')
+    settler_turn_id = get_settler_turn.get()['settler_turn']   
+
+    return render_template('select_city_improvement.html', settler = settlers[settler_turn_id])
