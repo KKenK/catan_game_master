@@ -29,6 +29,7 @@ from .helper_modules import (get_game_progress,
                              deactivate_knight,
                              insert_settlement_into_settlements_table,
                              increment_victory_point_cards,
+                             increment_city_improvement,
                              increment_defender_of_catan,
                              increment_knights_level,
                              decrement_the_barbarians_distance_from_catan,
@@ -508,3 +509,14 @@ def select_city_improvement():
     settler_turn_id = get_settler_turn.get()['settler_turn']   
 
     return render_template('select_city_improvement.html', settler = settlers[settler_turn_id])
+
+@bp.route('update_city_improvement', methods=['POST'])
+def update_city_improvement():
+ 
+    settler_turn_id = get_settler_turn.get()['settler_turn']
+
+    increment_city_improvement.increment_city_improvement(settler_turn_id, request.form.get('city_improvement'))
+
+    current_settler = Settler(get_settlers.get_settler_via_id(settler_turn_id))
+    
+    return game()
