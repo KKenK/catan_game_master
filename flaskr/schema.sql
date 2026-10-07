@@ -31,6 +31,18 @@ CREATE TABLE settlements (
     FOREIGN KEY (settler_id) REFERENCES settlers(id)
 );
 
+CREATE TABLE metropolises (
+    id TEXT UNIQUE NOT NULL,
+    "level" INTEGER NOT NULL,
+    settler_id INTEGER,
+    settlement_id INTEGER,
+    FOREIGN KEY (settler_id) REFERENCES settlers(id)
+    FOREIGN KEY (settlement_id) REFERENCES settlements(id)
+)
+INSERT INTO metropolises (id, level) VALUES ('trade', 4);
+INSERT INTO metropolises (id, level) VALUES ('politics', 4);
+INSERT INTO metropolises (id, level) VALUES ('science', 4);
+
 CREATE TABLE knights (
     id INTEGER PRIMARY KEY,
     settler_id INTEGER NOT NULL,
