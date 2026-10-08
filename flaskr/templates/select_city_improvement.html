@@ -18,7 +18,8 @@
                     <tbody>
                         <tr>
                             <td>
-                                <input type="radio" name="city_improvement" value="trade" required> 
+                                <input type="radio" name="city_improvement" value="trade" required>
+                                <input type="hidden" name="trade" value="{{settler.trade}}">
                             </td>
                             <td>Trade</td>    
                             <td>{{settler.trade}}</td>
@@ -26,6 +27,8 @@
                         <tr>
                             <td>
                                 <input type="radio" name="city_improvement" value="politics" required> 
+                                <input type="hidden" name="politics" value="{{settler.politics}}">
+
                             </td>
                             <td>Politics</td>    
                             <td>{{settler.politics}}</td>
@@ -33,6 +36,7 @@
                         <tr>
                             <td>
                                 <input type="radio" name="city_improvement" value="science" required> 
+                                <input type="hidden" name="science" value="{{settler.science}}">
                             </td>
                             <td>Science</td>    
                             <td>{{settler.science}}</td>
