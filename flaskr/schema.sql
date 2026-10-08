@@ -32,16 +32,16 @@ CREATE TABLE settlements (
 );
 
 CREATE TABLE metropolises (
-    id TEXT UNIQUE NOT NULL,
+    city_improvement TEXT UNIQUE NOT NULL PRIMARY KEY,
     "level" INTEGER NOT NULL,
     settler_id INTEGER,
     settlement_id INTEGER,
     FOREIGN KEY (settler_id) REFERENCES settlers(id)
     FOREIGN KEY (settlement_id) REFERENCES settlements(id)
 )
-INSERT INTO metropolises (id, level) VALUES ('trade', 4);
-INSERT INTO metropolises (id, level) VALUES ('politics', 4);
-INSERT INTO metropolises (id, level) VALUES ('science', 4);
+INSERT INTO metropolises (city_improvement, level) VALUES ('trade', 4);
+INSERT INTO metropolises (city_improvement, level) VALUES ('politics', 4);
+INSERT INTO metropolises (city_improvement, level) VALUES ('science', 4);
 
 CREATE TABLE knights (
     id INTEGER PRIMARY KEY,
