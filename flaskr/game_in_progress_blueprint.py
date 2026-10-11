@@ -3,6 +3,7 @@ from flask import (
 )
 from .helper_classes.army import Army
 from .helper_classes.knight import Knight
+from .helper_classes.settler import Metropolis
 from .helper_classes.portfolio import Portfolio
 from .helper_classes.settlement import Settlement
 from .helper_classes.settler import Settler
@@ -18,6 +19,7 @@ from .helper_modules import (get_game_progress,
                              get_settlements,
                              get_cities,
                              get_dice_roll,
+                             get_metropolises,
                              calculate_row_id,
                              assign_has_longest_road,
                              unassign_has_longest_road, 
@@ -515,8 +517,35 @@ def update_city_improvement():
  
     settler_turn_id = get_settler_turn.get()['settler_turn']
 
-    increment_city_improvement.increment_city_improvement(settler_turn_id, request.form.get('city_improvement'))
+    city_improvement = request.form.get('city_improvement')
+
+    increment_city_improvement.increment_city_improvement(settler_turn_id)
 
     current_settler = Settler(get_settlers.get_settler_via_id(settler_turn_id))
+
+    settler_city_improvement_level = request.form.get(city_improvement)
+    if settler_city_improvement_level < 4:
+        return game()
+
+    metropolis = Metropolis(get_metropolises.get_metropolis_via_city_improvement(city_improvement))
+
+    if not metropolis.settler_id:
+        
+        update_metropolis.metropolis_settler_id(settler_turn_id)
+        
+        return render_template('select_city_for_metropolis.html', settler_turn_id, city_improvement)
+         
+    if settler_city_improvement_level > metropolis.level:
+        
+        increment_metropolis_level.increment_metropolis_level(city_improvement)
     
+    if metropolis.settler_id != settler_turn_id:
+
+        update_metropolis.metropolis_settler_id(settler_turn_id)
+
+        return render_template('select_city_for_metropolis.html', settler_turn_id, city_improvement)
+
     return game()
+    
+
+
