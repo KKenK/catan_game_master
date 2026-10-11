@@ -1,0 +1,17 @@
+from .. import db
+
+def get_metropolises():
+    
+    database_connection = db.get_db()
+    
+    return database_connection.execute("""SELECT * FROM metropolises""").fetchall()
+
+def get_metropolises_via_city_improvement(city_improvement):
+    
+    database_connection = db.get_db()
+    
+    return database_connection.execute("""SELECT * FROM metropolises WHERE id = ?""",(city_improvement,)).fetchone()
+
+
+
+    
