@@ -520,6 +520,10 @@ def update_city_improvement():
 
     city_improvement = request.form.get('city_improvement')
 
+    current_settler_cities = [city for city in row_objects_to_classes.row_objects_to_classes(Settlement, get_cities.get_cities()) if city.settler_id == settler_turn_id]
+
+    resources = get_resources.get_resources()
+
     increment_city_improvement.increment_city_improvement(settler_turn_id, city_improvement)
 
     current_settler = Settler(get_settlers.get_settler_via_id(settler_turn_id))
@@ -535,7 +539,7 @@ def update_city_improvement():
         
         update_metropolis.metropolis_settler_id(city_improvement, settler_turn_id)
         
-        return render_template('select_city_for_metropolis.html', settler_turn_id = settler_turn_id, city_improvement = city_improvement)
+        return render_template('select_city_for_metropolis.html', settler_turn_id = settler_turn_id, settler_cities = current_settler_cities , resources = resources, city_improvement = city_improvement)
          
     if settler_city_improvement_level > metropolis.level:
         
@@ -545,7 +549,7 @@ def update_city_improvement():
 
         update_metropolis.metropolis_settler_id(city_improvement, settler_turn_id)
 
-        return render_template('select_city_for_metropolis.html', settler_turn_id = settler_turn_id, city_improvement = city_improvement)
+        return render_template('select_city_for_metropolis.html', settler_username = current_settler.username, settler_cities = current_settler_cities, resources = resources, city_improvement = city_improvement)
     
     return game()
 
