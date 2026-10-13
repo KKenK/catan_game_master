@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+
+        <header>
+            <h1>{{settler_username}} To Select City Upgrade To A Metropolis</h1>
+        </header>
+        <main>
+            <form action="assign_metropolis" method = "post">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Roll 1</th>
+                            <th>Resource 1</th>
+                            <th>Roll 2</th>
+                            <th>Resource 2</th>
+                            <th>Roll 3</th>
+                            <th>Resource 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for city in settler_cities %}
+                            <tr>
+                                <td>
+                                    <input type="radio" name="city_id" value="{{city['id']}}" required> 
+                                </td>
+                                {% for resource_hex in city.resource_hexes %}
+                                    <td>{{resource_hex.roll}}</td>
+                                    <td>{{resources[resource_hex.resource].name}}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">Submit!</button>
+            </form>
+
+        </main>
+    {% endblock %}
