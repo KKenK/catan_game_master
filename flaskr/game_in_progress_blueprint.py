@@ -42,6 +42,7 @@ from .helper_modules import (get_game_progress,
                              remove_first_settler_from_settlers_that_contributed_least_to_catans_defence_table,
                              update_current_settlers_longest_road,
                              update_dice_roll,
+                             update_metropolis,
                              update_is_city_column_of_settlement_to_true,
                              update_is_city_column_of_settlement_to_false)
 
@@ -519,11 +520,12 @@ def update_city_improvement():
 
     city_improvement = request.form.get('city_improvement')
 
-    increment_city_improvement.increment_city_improvement(settler_turn_id)
+    increment_city_improvement.increment_city_improvement(settler_turn_id, city_improvement)
 
     current_settler = Settler(get_settlers.get_settler_via_id(settler_turn_id))
 
-    settler_city_improvement_level = request.form.get(city_improvement)
+    settler_city_improvement_level = getattr(current_settler, city_improvement)
+    
     if settler_city_improvement_level < 4:
         return game()
 
@@ -546,6 +548,7 @@ def update_city_improvement():
         return render_template('select_city_for_metropolis.html', settler_turn_id, city_improvement)
 
     return game()
+
+
+
     
-
-
