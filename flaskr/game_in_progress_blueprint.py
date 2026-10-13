@@ -3,7 +3,7 @@ from flask import (
 )
 from .helper_classes.army import Army
 from .helper_classes.knight import Knight
-from .helper_classes.settler import Metropolis
+from .helper_classes.metropolis import Metropolis
 from .helper_classes.portfolio import Portfolio
 from .helper_classes.settlement import Settlement
 from .helper_classes.settler import Settler
@@ -531,17 +531,17 @@ def update_city_improvement():
 
     if not metropolis.settler_id:
         
-        update_metropolis.metropolis_settler_id(settler_turn_id)
+        update_metropolis.metropolis_settler_id(city_improvement, settler_turn_id)
         
         return render_template('select_city_for_metropolis.html', settler_turn_id, city_improvement)
          
     if settler_city_improvement_level > metropolis.level:
         
-        increment_metropolis_level.increment_metropolis_level(city_improvement)
+        update_metropolis.increment_metropolis_level(city_improvement)
     
     if metropolis.settler_id != settler_turn_id:
 
-        update_metropolis.metropolis_settler_id(settler_turn_id)
+        update_metropolis.metropolis_settler_id(city_improvement, settler_turn_id)
 
         return render_template('select_city_for_metropolis.html', settler_turn_id, city_improvement)
 
