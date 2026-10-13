@@ -6,7 +6,7 @@ def get_metropolises():
     
     return database_connection.execute("""SELECT * FROM metropolises""").fetchall()
 
-def get_metropolises_via_city_improvement(city_improvement):
+def get_metropolis_via_city_improvement(city_improvement):
     
     database_connection = db.get_db()
     
