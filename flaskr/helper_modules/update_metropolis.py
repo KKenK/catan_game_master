@@ -14,7 +14,7 @@ def increment_metropolis_level(city_improvement):
         
     database_connection = db.get_db()
 
-    database_connection.execute("""UPDATE metropolises SET level = level + 1 WHERE city_improvement = ?""", (city_improvement))
+    database_connection.execute("""UPDATE metropolises SET level = level + 1 WHERE city_improvement = ?""", (city_improvement,))
 
     database_connection.commit()
 
