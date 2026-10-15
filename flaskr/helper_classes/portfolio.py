@@ -1,6 +1,6 @@
 class Portfolio():
 
-    def __init__(self, settlements, settler_id, metropolises):
+    def __init__(self, settlements, metropolises, settler_id):
         self.settler_id = settler_id
         self.settlements = settlements
         self.metropolises = metropolises

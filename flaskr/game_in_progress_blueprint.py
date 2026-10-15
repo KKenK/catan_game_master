@@ -60,8 +60,11 @@ def game():
 
     settlements = row_objects_to_classes.row_objects_to_classes(Settlement, get_settlements.get_settlements())
 
+    metropolises = row_objects_to_classes.row_objects_to_classes(Metropolis, get_metropolises.get_metropolises())
+    
     settler_portfolios = {settler_index : Portfolio([settlement for settlement in settlements if settlement.settler_id == settler_index], settler_index) for settler_index in range(len(settlers))}
 
+    
     victory_points = {settler.id : settler.calculate_victory_points(settler_portfolios[settler.id].value) for settler in settlers}
 
     victor = [victory_point[0] for victory_point in victory_points.items() if victory_point[1] >= 13]
