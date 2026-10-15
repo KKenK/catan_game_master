@@ -553,5 +553,13 @@ def update_city_improvement():
     
     return game()
 
+@bp.route('update_metropolis_city_id', methods=['POST'])
+def update_metropolis_city_id():
 
-    
+    city_improvement = request.form.get('city_improvement')
+
+    id_of_city_to_become_a_metropolis = int(request.form.get('city_id'))
+
+    update_metropolis.city_id(city_improvement, id_of_city_to_become_a_metropolis)
+
+    return game()
